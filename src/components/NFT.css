@@ -1,0 +1,277 @@
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #f2f2f2;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+  margin-right: 10px;
+}
+
+.company-name {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+}
+
+.navigation ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.navigation li {
+  font-size: 18px;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+}
+
+.bell-icon {
+  font-size: 24px;
+  color: #555;
+  margin-right: 10px;
+}
+
+.connect-wallet-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+}
+
+.connect-wallet-button:hover {
+  background-color: #333;
+}
+
+/* Section styles */
+section {
+  padding: 20px;
+}
+
+h2,
+h3 {
+  margin-bottom: 10px;
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f2f2f2;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+}
+
+.profile-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.channel-details h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.subscribers {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.wallet-address {
+  font-size: 14px;
+  color: #777;
+}
+
+.subscribe-button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Tabs styles */
+.tabs {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f2f2f2;
+}
+
+.tabs button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Feature box styles */
+.feature-box {
+  display: flex;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.feature-image {
+  flex: 0 0 40%;
+  margin-right: 20px;
+}
+
+.feature-image img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+}
+
+.feature-content {
+  flex: 0 0 40%;
+}
+
+.feature-content h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.feature-content p {
+  margin-bottom: 10px;
+}
+
+.feature-content button {
+  padding: 10px 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.feature-details {
+  flex: 0 0 20%;
+}
+
+.feature-details h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.feature-details p {
+  margin-bottom: 10px;
+}
+
+.feature-details h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.feature-details ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.feature-details li {
+  margin-bottom: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .feature-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .feature-image {
+    margin-right: 0;
+    margin-bottom: 10px;
+    flex: 0 0 100%;
+  }
+
+  .feature-content {
+    flex: 0 0 100%;
+  }
+
+  .feature-details {
+    flex: 0 0 100%;
+  }
+}
+
+/* Font Awesome icons */
+.fab {
+  font-size: 24px;
+}
+
+footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.footer-links a {
+  margin-right: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.social-media-icons {
+  margin-top: 20px;
+}
+
+.social-media-icons i {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  margin-right: 10px;
+  text-align: center;
+  line-height: 30px;
+  color: #fff;
+}
+
+.social-media-icons i:last-child {
+  margin-right: 0;
+}
+
+.social-media-icons i:hover {
+  background-color: #007bff;
+}
+
+footer p {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #999;
+}
+
+.line {
+  margin: 4px 0;
+  border-top: 1px solid #ccc;
+}

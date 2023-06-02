@@ -300,3 +300,75 @@ footer p {
   margin: 4px 0;
   border-top: 1px solid #ccc;
 }
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.tabs button {
+  box-sizing: border-box;
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6px 8px;
+  gap: 10px;
+
+  border: 1px solid #dcd4ff;
+  border-radius: 5px;
+
+  /* Inside auto layout */
+
+  flex: none;
+  order: 2;
+  flex-grow: 0;
+}
+
+.tab > button:hover {
+  background: #8247e5;
+}
+
+.tabs button > {
+  width: 40px;
+  height: 19px;
+
+  /* body text2 semibold */
+
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 19px;
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.search-bar input[type="text"] {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  gap: 16px;
+  width: 526px;
+  height: 72px;
+  background: #ffffff;
+  border: 1px solid #ece8ff;
+  box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 45px;
+}

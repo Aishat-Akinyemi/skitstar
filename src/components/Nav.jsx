@@ -1,6 +1,6 @@
 import React from 'react';
 import { IconButton } from '@chakra-ui/react'
-import { Video, Notification } from 'iconsax-react';
+import { Video, Notification,  } from 'iconsax-react';
 import { ConnectWallet } from '@thirdweb-dev/react';
 
 

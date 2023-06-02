@@ -3,7 +3,7 @@ import { Home2, Element4, VideoTime, Setting2, MessageQuestion, HambergerMenu, P
 import { List, ListIcon, ListItem } from '@chakra-ui/react';
 export const SideBar = () => {
   return (
-<List spacing={6}>
+<List spacing={6} width="218px" height="364px" color="#626262" as="section" mr="24px">
   <ListItem>
     <ListIcon as={Home2} color='brand.900' width="24px" height="24px"/>
     Home

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton } from '@chakra-ui/react'
+import { IconButton, Flex, Spacer , Box, Text} from '@chakra-ui/react'
 import { Video, Notification,  } from 'iconsax-react';
 import { ConnectWallet } from '@thirdweb-dev/react';
 
@@ -7,34 +7,44 @@ import { ConnectWallet } from '@thirdweb-dev/react';
 
 export const Nav = () => {
   return (
-    <header className="header">
-        <div className="logo">
-            <IconButton
-                colorScheme='purple'
-                isRound = {true}
-                p={2}
-                icon={<Video color="#eee" variant="Bulk" size={32} /> }
-            />
+    <Box mt="34px">
+        <Flex>
+            <Box>
+              <IconButton
+                  colorScheme='purple'
+                  isRound = {true}
+                  p={2}
+                  icon={<Video color="#eee" variant="Bulk" size={32} /> }
+              />
+              <Text as="span" fontSize="18px" fontWeight="700" lineHeight="22px" fontFamily="Goldman" ml="8px">SkitStars</Text>
+            </Box>
+            <Spacer />
+            <Box>
+              <Flex alignItems="flex-start" gap="40px" w="377px" h="25px"
+                    fontFamily="Open Sans" fontWeight="600" color="#333333"
+               >
                
-          <div className="company-name">SkitStars</div>
-        </div>
-        <div className="navigation">
-          <ul>
-            <li>Our Mission</li>
-            <li>FAQ</li>
-            <li>Become a Creator</li>
-          </ul>
-        </div>
-        <div className="right-section">
-            <IconButton
-                // colorScheme='purple'
-                // isRound = {true}
-                mr={4}
-                icon={<Notification size="32" color="#292D32" variant="Outline"/> }
-            />
+                <Box>Our Mission</Box>
+                  <Spacer/>
+                  <Box>FAQ</Box>
+                  <Spacer/>
+                  <Box>Become a Creator</Box>
+              
+              </Flex>
+            </Box>
+            <Spacer/>
+            <Box>
+              <IconButton
+                  // colorScheme='purple'
+                  // isRound = {true}
+                  mr={4}
+                  icon={<Notification size="32" color="#292D32" variant="Outline"/> }
+              />
             
             <ConnectWallet color="#8247E5" style={{backgroundColor:"#8247E5", borderRadius: "45px", padding: '16px 32px', color:'white'}}/>
-        </div>
-      </header>
+        
+            </Box>
+        </Flex>
+    </Box>
   )
 }

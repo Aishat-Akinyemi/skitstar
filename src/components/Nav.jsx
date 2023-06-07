@@ -35,15 +35,11 @@ export const Nav = () => {
             <Spacer/>
             <Box>
               <IconButton
-                  // colorScheme='purple'
-                  // isRound = {true}
                   mr={4}
                   icon={<Notification size="32" color="#292D32" variant="Outline"/> }
               />
-            
             <ConnectWallet color="#8247E5" style={{backgroundColor:"#8247E5", borderRadius: "45px", padding: '16px 32px', color:'white'}}/>
-        
-            </Box>
+          </Box>
         </Flex>
     </Box>
   )

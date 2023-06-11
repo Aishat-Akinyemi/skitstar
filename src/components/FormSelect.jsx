@@ -1,6 +1,6 @@
 import { useFormContext, Controller } from "react-hook-form";
 import {
-  Textarea,
+  Select,
   FormControl,
   FormLabel,
   FormErrorMessage
@@ -8,12 +8,11 @@ import {
 
 import React from "react";
 
-export const FormInput = ({ name, isTextArea, rows, type, ...otherProps }) => {
+export const FormSelect = ({ name, options, ...otherProps }) => {
   const {
     control,
     formState: { errors }
   } = useFormContext();
-
   return (
     <Controller
       control={control}
@@ -27,21 +26,22 @@ export const FormInput = ({ name, isTextArea, rows, type, ...otherProps }) => {
             fontSize="24px"
             fontWeight="600"
             textTransform="capitalize"
-            
           >
             {name}
           </FormLabel>
-          <Textarea
-            height={isTextArea ? "" : "45px"}
-            id="name"
-            rows={rows ? rows : 1}
-            resize="none"
-            variant="outline"
+          <Select
+            placeholder={`select ${name}`}
+            height="45px"
             {...field}
             {...otherProps}
-            error={!!errors[name]}
-          />
-          <FormErrorMessage color="#d32f2f">
+          >
+            {options.map((option, id) => (
+              <option key={id} value={option.toString()}>
+                {option}
+              </option>
+            ))}
+          </Select>
+          <FormErrorMessage>
             {errors[name] && errors[name].message}
           </FormErrorMessage>
         </FormControl>

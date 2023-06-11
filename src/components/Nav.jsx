@@ -22,13 +22,11 @@ export const Nav = () => {
             <Box>
               <Flex alignItems="flex-start" gap="40px" w="377px" h="25px"
                     fontFamily="Open Sans" fontWeight="600" color="#333333"
-               >
+              >
                
                 <Box>Our Mission</Box>
-                  <Spacer/>
-                  <Box>FAQ</Box>
-                  <Spacer/>
-                  <Box>Become a Creator</Box>
+                <Box>FAQ</Box>
+                <Box>Become a Creator</Box>
               
               </Flex>
             </Box>

@@ -12,22 +12,22 @@ const faqList = [
     {
         id: 1,
         question: 'Can I purchase event tickets directly on the platform?',
-        answer: 'AElf is a decentralized blockchain network empowered by cloud computing infrastructure. Each node on aelf mainnet is independent, with outstanding performance and unlimited scalability.'    
+        answer: 'Yes, events tickets can be bought on the platform.'    
     },
     {
         id: 2,
         question: 'Are the purchased NFTs transferable?',
-        answer: 'AElf academy is a Learn and Earn decentralized, self-sustaining learning platform that seeks to equip learners with knowledge on how to Build d-Apps on AElf blockchain. Learners can earn Elf tokesn by successfully completing Quests at the end of each course.  AElf Academy makes your learning simple, fun and rewarding!'    
+        answer: 'Yes, You can transfer your NFTs to other users through a sale or gift!'    
     },
     {
         id: 3,
         question: 'How do I sell my own event tickets on the platform?',
-        answer: 'To build the ecosystem by making learning fun, exciting and rewarding. To make knowledge easily accessible. To grow the aAelf developer community. Join the community of builders and learn along with leading developers.'    
+        answer: 'You can register as a creator, then create NFT tickets for your evets.'    
     },
     {
         id: 4,
         question: 'How can I collaborate with brands for advertisement opportunities?',
-        answer: 'AElf is an advanced blockchain and it is simple to start building on AELF. You can quickly go from Zero to Hero. AElf ecosystem has developer tools to support your journey. Aelf is unlimitedly scalable. '    
+        answer: 'Each creator has an "Ads Voucher" tab on their pages, you can buy ads voucher from a creator who then advertises for you. '    
     }
 ]
 

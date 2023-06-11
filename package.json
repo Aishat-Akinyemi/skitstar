@@ -13,6 +13,7 @@
     "@chakra-ui/react": "^2.7.0",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.1.0",
     "@openzeppelin/contracts": "^4.9.0",
     "@openzeppelin/contracts-upgradeable": "^4.9.0",
     "@thirdweb-dev/chains": "^0.1.18",
@@ -24,7 +25,9 @@
     "iconsax-react": "^0.0.8",
     "loader-utils": "^3.2.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.44.3",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^2",

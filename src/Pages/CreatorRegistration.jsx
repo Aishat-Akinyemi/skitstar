@@ -11,14 +11,13 @@ import { ActionButton } from '../components/ActionButton';
 
 export const CreatorRegistration = () => {
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"]
-    const MAX_FILE_SIZE = 300000;
+    const MAX_FILE_SIZE = 3000000;
   const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
     "image/jpg",
     "image/png",
     "image/webp"
   ];
-
     const registrationSchema = z.object({
         name: z.string().min(4, "Brand name should be at least 4 characters").max(20, 
             "Brand name should be maximum 20 characters"),
@@ -94,6 +93,7 @@ export const CreatorRegistration = () => {
                             type="file"
                             style={{ display: "none" }}
                             {...methods.register("profileImage")}
+                            accept='image/*'
                         ></input>
                         Upload File
                         </label>

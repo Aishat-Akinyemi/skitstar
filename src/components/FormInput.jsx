@@ -39,7 +39,7 @@ export const FormInput = ({ name, isTextArea, rows, type, ...otherProps }) => {
             variant="outline"
             {...field}
             {...otherProps}
-            error={!!errors[name]}
+            // error={!!errors[name]}
           />
           <FormErrorMessage color="#d32f2f">
             {errors[name] && errors[name].message}

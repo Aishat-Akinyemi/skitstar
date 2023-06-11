@@ -34,8 +34,7 @@ export const FormCheckBox = ({ name, label, ...otherProps }) => {
           </FormLabel>
           <Checkbox
             size="md"
-            error={!!errors[name]}
-            value="true"
+            // error={!!errors[name]}
             {...field}
             {...otherProps}
           >

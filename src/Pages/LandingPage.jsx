@@ -3,11 +3,11 @@ import { Box, Button, Flex, HStack, Text, VStack, Image, Heading, Center, Divide
 import PressPlayBro from "../assets/PressPlayBro.svg"
 import BitcoinTrans from "../assets/BitcoinTrans.svg";
 import Steps from "../assets/Steps.svg";
-import { VideoDisplayCard } from './VideoDisplayCard'
-import { FeatureCard } from './FeatureCard';
-import {ActionButton} from './ActionButton';
-import { Reviews } from './Reviews';
-import { Faq } from './Faq';
+import { VideoDisplayCard } from '../components/VideoDisplayCard'
+import { FeatureCard } from '../components/FeatureCard';
+import {ActionButton} from '../components/ActionButton';
+import { Reviews } from '../components/Reviews';
+import { Faq } from '../components/Faq';
 
 
 export const LandingPage = () => {

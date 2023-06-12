@@ -3,12 +3,12 @@ import {
   Textarea,
   FormControl,
   FormLabel,
-  FormErrorMessage
+  FormErrorMessage, Input
 } from "@chakra-ui/react";
 
 import React from "react";
 
-export const FormInput = ({ name, isTextArea, rows, type, ...otherProps }) => {
+export const FormInput = ({ name, isTextArea, rows, type, label, ...otherProps }) => {
   const {
     control,
     formState: { errors }
@@ -29,18 +29,32 @@ export const FormInput = ({ name, isTextArea, rows, type, ...otherProps }) => {
             textTransform="capitalize"
             
           >
-            {name}
+            {label ? label : name}
           </FormLabel>
-          <Textarea
-            height={isTextArea ? "" : "45px"}
-            id="name"
-            rows={rows ? rows : 1}
-            resize="none"
-            variant="outline"
-            {...field}
-            {...otherProps}
-            // error={!!errors[name]}
-          />
+          {
+            (type)
+            ?
+              <Input              
+              h="45px"              
+              variant="outline"
+              id="name"
+              type={type}
+              {...field}
+              {...otherProps}
+              />
+            :
+              <Textarea
+              height={isTextArea ? "" : "45px"}
+              id="name"
+              rows={rows ? rows : 1}
+              resize="none"
+              variant="outline"
+              {...field}
+              {...otherProps}
+            />
+
+
+          }
           <FormErrorMessage color="#d32f2f">
             {errors[name] && errors[name].message}
           </FormErrorMessage>

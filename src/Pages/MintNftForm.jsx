@@ -1,28 +1,25 @@
 import React from 'react';
-import {Box, Heading, Text, Center, HStack} from "@chakra-ui/react";
+import {Box, Heading, Text, Center, Input} from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {FormInput} from "../components/FormInput";
-import {FormSelect} from "../components/FormSelect";
+import {FormCheckBox} from "../components/FormCheckBox";
 import { DocumentUpload } from 'iconsax-react';
 import { ActionButton } from '../components/ActionButton';
 
-export const CreatorRegistration = () => {
-    const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"]
+export const MintNftForm = () => {
     const MAX_FILE_SIZE = 3000000;
-  const ACCEPTED_IMAGE_TYPES = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp"
-  ];
-    const registrationSchema = z.object({
-        name: z.string().min(4, "Brand name should be at least 4 characters").max(20, 
-            "Brand name should be maximum 20 characters"),
-        email: z.string().min(1, "Email is required").email("Email is invalid"),
-        about: z.string().optional(),
-        profileImage: z
+    const ACCEPTED_IMAGE_TYPES = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp"
+    ];
+    const mintNftSchema = z.object({
+        name: z.string().min(4, "Event name should be at least 4 characters").max(20, 
+            "Event name should be maximum 20 characters"),
+        image: z
         .any()
         .refine((files) => files?.length === 1, "Image is required.")
         .refine(
@@ -32,19 +29,22 @@ export const CreatorRegistration = () => {
         .refine(
           (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
           ".jpg, .jpeg, .png and .webp files are accepted."
-        ),
-        category: z.enum(Categories)
-                    .refine((val) => Categories.includes(val), "Category is required"),
-        instagramUrl: z.string().url("must be a valid url"),
-        twitterUrl: z.string().url("must be a valid url")
+        ),        
+        price: z.string(), 
+        saleStatus:  z.boolean().optional(),            
     });
 
+    const defaultValues = {
+        saleStatus : true
+    };
+
     const { ...methods } = useForm({
-        resolver: zodResolver(registrationSchema)
+        resolver: zodResolver(mintNftSchema),
+        defaultValues
     });
    
-    let profileImageError = methods.formState.errors["profileImage"]
-    ? methods.formState.errors["profileImage"].message
+    let eventImageError = methods.formState.errors["eventImage"]
+    ? methods.formState.errors["eventImage"].message
     : "";
 
     const onSubmit = (values) => {
@@ -53,17 +53,14 @@ export const CreatorRegistration = () => {
 
   return (
     <Box>
-        <Heading>Register as A Creator</Heading>
+        <Heading>Mint NFTs</Heading>
         <FormProvider {...methods}>
             <Box
                 as="form"
                 noValidate
                 autoComplete="off"
                 onSubmit={methods.handleSubmit(onSubmit)}
-            >
-                <FormInput name="name" required/>
-                <FormInput name="email" required />
-                <FormInput name="about" isTextArea rows="4" required></FormInput>
+            >          
                 <Center
                     w="750px"
                     h="433px"
@@ -91,24 +88,23 @@ export const CreatorRegistration = () => {
                         <input
                             type="file"
                             style={{ display: "none" }}
-                            {...methods.register("profileImage")}
+                            {...methods.register("eventImage")}
                             accept='image/*'
                         ></input>
                         Upload File
                         </label>
                     </Center>
-                    {profileImageError && (
+                    {eventImageError && (
                         <Text color="#d32f2f" pos="absolute" left="50px" bottom="10px">
-                        {profileImageError}
+                        {eventImageError}
                         </Text>
                     )}
                 </Center>
-                <FormSelect name="category" options={Categories} />
-                <FormInput name="instagramUrl" label="Instagram Profile Link" required />
-                <FormInput name="twitterUrl" label="Twitter Profile Link" required />
-                <Center gap={5}> 
-                    <ActionButton label="Cancel Registration" colorScheme="gray" />   
-                    <ActionButton label="Complete Registration" type="submit" isLoading={methods.formState.isSubmitting}/>   
+                <FormInput name="name" required/>    
+                <FormInput name="price" label="Price in SKTSTR" type="number" required />   
+                <FormCheckBox name="saleStatus" label="Sale Status" checkBoxLabel="List Event For Sale" defaultChecked/>
+                <Center> 
+                    <ActionButton label="Create NFT Collection" type="submit" isLoading={methods.formState.isSubmitting}/>   
                 </Center>
             </Box>
         </FormProvider>

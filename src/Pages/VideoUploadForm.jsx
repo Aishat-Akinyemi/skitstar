@@ -17,7 +17,6 @@ export const VideoUploadForm = () => {
     "video/mp4",
   ];
 
-  const logg = ( ) => console.log(methods.formState.errors["category"])
     const videoUploadSchema = z.object({
         title: z.string().min(4, "Video Title should be at least 4 characters").max(20, 
             "Video title should be maximum 50 characters"),
@@ -108,7 +107,7 @@ export const VideoUploadForm = () => {
                 <FormInput name="description" isTextArea rows="4"></FormInput>                
                 <FormSelect name="category" options={Categories} />
                 <FormSelect name="visibility" options={Visibility} />
-                <FormCheckBox name="promotion" label="My video contains paid promotion like a product or sponsporship" />
+                <FormCheckBox name="promotion" checkBoxLabel="My video contains paid promotion like a product or sponsporship" />
                 <Center>   
                     <ActionButton label="Upload" type="submit" isLoading={methods.formState.isSubmitting}/>   
                 </Center>

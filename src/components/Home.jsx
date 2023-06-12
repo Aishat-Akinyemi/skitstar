@@ -4,7 +4,7 @@ import { Box } from '@chakra-ui/react'
 export const Home = () => {
   return (
     <Box>
-        <Box className='tabs'>
+        <Box className='tabs' backgroundColor="white">
             <button>All   </button>
             <button>Musical</button>
             <button>Satire</button>
@@ -13,7 +13,7 @@ export const Home = () => {
             <button>Parody</button>
             <button>Sketch</button>            
         </Box>
-        <Box>
+        <Box className='search-bar'>
             <input type="text" placeholder="Search Creators" />            
         </Box>
     </Box>

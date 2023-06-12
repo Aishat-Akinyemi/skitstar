@@ -9,7 +9,7 @@ import {
 
 import React from "react";
 
-export const FormCheckBox = ({ name, label, ...otherProps }) => {
+export const FormCheckBox = ({ name, checkBoxLabel, label, ...otherProps }) => {
   const {
     control,
     formState: { errors }
@@ -30,7 +30,7 @@ export const FormCheckBox = ({ name, label, ...otherProps }) => {
             fontWeight="600"
             textTransform="capitalize"
           >
-            {name}
+            {label? label : name}
           </FormLabel>
           <Checkbox
             size="md"
@@ -38,7 +38,7 @@ export const FormCheckBox = ({ name, label, ...otherProps }) => {
             {...field}
             {...otherProps}
           >
-            {label}
+            {checkBoxLabel}
           </Checkbox>
           <FormErrorMessage>
             {errors[name] && errors[name].message}

@@ -8,7 +8,7 @@ import {
 
 import React from "react";
 
-export const FormSelect = ({ name, options, ...otherProps }) => {
+export const FormSelect = ({ name, options, label, ...otherProps }) => {
   const {
     control,
     formState: { errors }
@@ -27,7 +27,7 @@ export const FormSelect = ({ name, options, ...otherProps }) => {
             fontWeight="600"
             textTransform="capitalize"
           >
-            {name}
+           {label ? label : name}
           </FormLabel>
           <Select
             placeholder={`select ${name}`}

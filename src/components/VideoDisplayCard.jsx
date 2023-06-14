@@ -4,7 +4,7 @@ import PressPlayBro from "../assets/PressPlayBro.svg"
 
 
 export const VideoDisplayCard = ({src, title, creatorAvatar, creatorName, views, datePosted}) => {
-    let temp = {src :"https://media.licdn.com/dms/image/C4D03AQEYfSMJT3aPAA/profile-displayphoto-shrink_800_800/0/1656793439753?e=2147483647&v=beta&t=xBxxtaFX6MLF0gXAW4OcOlwhJHvQpbrKHNGp7qs-cMU", 
+    let temp = {thumbnail :"https://www.techsmith.com/blog/wp-content/uploads/2019/06/YouTube-Thumbnail-Sizes.png", 
     title:"TGIF Comedy series | A special Friday show ", creatorAvatar: "https://media.licdn.com/dms/image/C4D03AQEYfSMJT3aPAA/profile-displayphoto-shrink_800_800/0/1656793439753?e=2147483647&v=beta&t=xBxxtaFX6MLF0gXAW4OcOlwhJHvQpbrKHNGp7qs-cMU", 
     creatorName:"The Good Laugh Zone", views:"20M", datePosted:"2/2/2023"}
     return (
@@ -16,22 +16,22 @@ export const VideoDisplayCard = ({src, title, creatorAvatar, creatorName, views,
          h="340px"
     >
         <Image 
-                src={PressPlayBro} alt="" 
+                src={temp.thumbnail} alt="" 
                 borderRadius="10px"
                 w="360px"
                 h="232px" 
 
         />
         <HStack gap="16px">
-            <Avatar size="md" name={temp.creatorName} src={temp.src}></Avatar>
-            <VStack gap="16px">
+            <Avatar size="md" name={temp.creatorName} src={temp.creatorAvatar}></Avatar>
+            <VStack gap="16px" alignItems="flex-start">
                 <Text fontFamily="Open Sans" fontWeight="700" fontSize="16px" lineHeight="22px"
                     fontStyle="normal" h="24px" w="250px"
                 >
                     {temp.title}
                 </Text>
                 <Text fontFamily="Open Sans" fontWeight="600" fontSize="12px" lineHeight="16px"
-                    fontStyle="normal" color="#828282" mt="8px" textAlign="left"
+                    fontStyle="normal" color="#828282" mt="8px" 
                 >
                     {temp.creatorName}
                 </Text>

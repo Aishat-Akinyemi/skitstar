@@ -13,6 +13,7 @@ export const VideoUploadForm = () => {
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"];
     const Visibility = ["NFT Collectors", "General"]
     const MAX_FILE_SIZE = 5000000;
+    const MAX_THUMBNAIL_SIZE = 1000000;
   const ACCEPTED_IMAGE_TYPES = [
     "video/mp4",
   ];
@@ -32,6 +33,17 @@ export const VideoUploadForm = () => {
                     (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
                     ".mp4 files are accepted."
                     ),
+        thumbnail: z
+        .any()
+        .refine((files) => files?.length === 1, "Image is required.")
+        .refine(
+          (files) => files?.[0]?.size <= MAX_THUMBNAIL_SIZE,
+          `Max file size is 1MB.`
+        )
+        .refine(
+          (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+          ".jpg, .jpeg, .png and .webp files are accepted."
+        ), 
         category: z.enum(Categories)
                     .refine((val) => Categories.includes(val), {message: "Please select one of the choices"}),
         visibility: z.enum(Visibility)
@@ -54,7 +66,9 @@ export const VideoUploadForm = () => {
     const onSubmit = (values) => {
         console.log(values);
     };
-
+    let thumbnailError = methods.formState.errors["thumbnail"]
+    ? methods.formState.errors["thumbnail"].message
+    : "";
   return (
     <Box>
         <Heading>Video Details</Heading>
@@ -104,7 +118,46 @@ export const VideoUploadForm = () => {
                     )}
                 </Center>
                 <FormInput name="title" required/>
-                <FormInput name="description" isTextArea rows="4"></FormInput>                
+                <FormInput name="description" isTextArea rows="4"/> 
+                <Center
+                    w="750px"
+                    h="433px"
+                    borderRadius="20px"
+                    background="#ECE8FF"
+                    pos="relative"
+                    >
+                    <Center
+                        flexDirection="column"
+                        borderRadius="20px"
+                        background="white"
+                        w="670px"
+                        h="353px"
+                    >
+                        <DocumentUpload size="32" color="#8247E5"/>
+                        <label
+                        style={{
+                            borderRadius: "45px",
+                            border: "1px solid #8247E5",
+                            padding: "14px 32px",
+                            color: "#8247E5",
+                            marginTop: "16px"
+                        }}
+                        >
+                        <input
+                            type="file"
+                            style={{ display: "none" }}
+                            {...methods.register("thumbnail")}
+                            accept='image/*'
+                        ></input>
+                        Upload Thumbnail
+                        </label>
+                        </Center>
+                        {thumbnailError && (
+                            <Text color="#d32f2f" pos="absolute" left="50px" bottom="10px">
+                            {thumbnailError}
+                            </Text>
+                        )}
+                </Center>              
                 <FormSelect name="category" options={Categories} />
                 <FormSelect name="visibility" options={Visibility} />
                 <FormCheckBox name="promotion" checkBoxLabel="My video contains paid promotion like a product or sponsporship" />

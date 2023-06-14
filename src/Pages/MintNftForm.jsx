@@ -61,38 +61,38 @@ export const MintNftForm = () => {
                 autoComplete="off"
                 onSubmit={methods.handleSubmit(onSubmit)}
             >          
+            <Center
+                w="750px"
+                h="433px"
+                borderRadius="20px"
+                background="#ECE8FF"
+                pos="relative"
+                >
                 <Center
-                    w="750px"
-                    h="433px"
+                    flexDirection="column"
                     borderRadius="20px"
-                    background="#ECE8FF"
-                    pos="relative"
+                    background="white"
+                    w="670px"
+                    h="353px"
+                >
+                    <DocumentUpload size="32" color="#8247E5"/>
+                    <label
+                    style={{
+                        borderRadius: "45px",
+                        border: "1px solid #8247E5",
+                        padding: "14px 32px",
+                        color: "#8247E5",
+                        marginTop: "16px"
+                    }}
                     >
-                    <Center
-                        flexDirection="column"
-                        borderRadius="20px"
-                        background="white"
-                        w="670px"
-                        h="353px"
-                    >
-                        <DocumentUpload size="32" color="#8247E5"/>
-                        <label
-                        style={{
-                            borderRadius: "45px",
-                            border: "1px solid #8247E5",
-                            padding: "14px 32px",
-                            color: "#8247E5",
-                            marginTop: "16px"
-                        }}
-                        >
-                        <input
-                            type="file"
-                            style={{ display: "none" }}
-                            {...methods.register("eventImage")}
-                            accept='image/*'
-                        ></input>
-                        Upload File
-                        </label>
+                    <input
+                        type="file"
+                        style={{ display: "none" }}
+                        {...methods.register("eventImage")}
+                        accept='image/*'
+                    ></input>
+                    Upload File
+                    </label>
                     </Center>
                     {eventImageError && (
                         <Text color="#d32f2f" pos="absolute" left="50px" bottom="10px">

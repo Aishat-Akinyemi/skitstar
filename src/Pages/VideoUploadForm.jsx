@@ -1,4 +1,4 @@
-import React from 'react';
+import {React, useMemo} from 'react';
 import {Box, Heading, Text, Center, HStack} from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,8 +8,9 @@ import {FormCheckBox} from "../components/FormCheckBox";
 import {FormSelect} from "../components/FormSelect";
 import { DocumentUpload } from 'iconsax-react';
 import { ActionButton } from '../components/ActionButton';
+import { useCreateAsset, useUpdateAsset } from '@livepeer/react';
 
-export const VideoUploadForm = () => {
+export const VideoUploadForm = ({}) => {
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"];
     const Visibility = ["NFT Collectors", "General"]
     const MAX_FILE_SIZE = 5000000;
@@ -69,6 +70,46 @@ export const VideoUploadForm = () => {
     let thumbnailError = methods.formState.errors["thumbnail"]
     ? methods.formState.errors["thumbnail"].message
     : "";
+    const {
+        mutate: createAsset,
+        data: assets,
+        progress,
+        error,
+      } = useCreateAsset(        
+        (methods.getValues("videoFile")?.[0])
+          ? {
+              sources: [{ name:  methods.getValues("videoFile")?.[0]?.name, file: methods.getValues("videoFile")?.[0] }],
+            }
+          : null
+    );
+
+    const uploadAsset = async () => {
+        await createAsset?.();
+        assets?.map((asset)=> {
+            console.log(asset);
+        })
+    };
+    const { mutate: updateAsset, status } = useUpdateAsset({
+        // Here we are providing the assetId of the video
+        assetId: assets?.[0].id,
+        // And choose IPFS : true to make sure the video is uploaded to IPFS
+        storage: { ipfs: true },
+      });
+
+    const progressFormatted = useMemo(
+        () =>
+          progress?.[0].phase === 'failed'
+            ? 'Failed to process video.'
+            : progress?.[0].phase === 'waiting'
+            ? 'Waiting'
+            : progress?.[0].phase === 'uploading'
+            ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
+            : progress?.[0].phase === 'processing'
+            ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
+            : null,
+        [progress],
+    );
+
   return (
     <Box>
         <Heading>Video Details</Heading>
@@ -106,6 +147,7 @@ export const VideoUploadForm = () => {
                         <input
                             type="file"
                             style={{ display: "none" }}
+                            accept='video/*'
                             {...methods.register("videoFile")}
                         ></input>
                         Upload Video File
@@ -117,7 +159,7 @@ export const VideoUploadForm = () => {
                         </Text>
                     )}
                 </Center>
-                <FormInput name="title" required/>
+                {/* <FormInput name="title" required/>
                 <FormInput name="description" isTextArea rows="4"/> 
                 <Center
                     w="750px"
@@ -160,9 +202,21 @@ export const VideoUploadForm = () => {
                 </Center>              
                 <FormSelect name="category" options={Categories} />
                 <FormSelect name="visibility" options={Visibility} />
-                <FormCheckBox name="promotion" checkBoxLabel="My video contains paid promotion like a product or sponsporship" />
+                <FormCheckBox name="promotion" checkBoxLabel="My video contains paid promotion like a product or sponsporship" /> */}
+                <p>{progressFormatted}</p>
+      {assets?.map((asset) => (
+        <div key={asset.id}>
+          <div>
+            <div>Asset Name: {asset?.name}</div>
+            <div>Playback URL: {asset?.playbackUrl}</div>
+            <div>IPFS CID: {asset?.storage?.ipfs?.cid ?? 'None'}</div>
+          </div>
+        </div>
+      ))}
                 <Center>   
-                    <ActionButton label="Upload" type="submit" isLoading={methods.formState.isSubmitting}/>   
+                    <ActionButton label="get" type="" onClick={uploadAsset}/>   
+                    <ActionButton label="upload to ipfs" type="" onClick={() => updateAsset?.()}/>   
+                    {/* <ActionButton label="Upload" type="submit" isLoading={methods.formState.isSubmitting}/>    */}
                 </Center>
             </Box>
         </FormProvider>

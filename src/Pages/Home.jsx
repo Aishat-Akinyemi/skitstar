@@ -38,7 +38,7 @@ export const Home = () => {
           <Input type='search' placeholder='Search'  borderRadius="45px" boxShadow="4px 4px 2px rgba(0, 0, 0, 0.1);"/>
         </InputGroup>          
       </Box>
-      <Heading>Trending Videos</Heading>
+      <Heading my="24px">Trending Videos</Heading >
       {/* {
         for (let index = 0; index < 9; index++) {
           <VideoDisplayCard></VideoDisplayCard>

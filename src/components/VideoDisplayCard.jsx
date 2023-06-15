@@ -16,7 +16,7 @@ export const VideoDisplayCard = ({src, title, creatorAvatar, creatorName, views,
          h="340px"
     >
         <Image 
-                src={temp.thumbnail} alt="" 
+                src={temp.thumbnail} 
                 borderRadius="10px"
                 w="360px"
                 h="232px" 

@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { QuoteUpSquare } from "iconsax-react";
 import React from "react";
-import { Rating } from "./Rating";
+// import { Rating } from "./Rating";
 
 export const Reviews = ({ reviews }) => {
   return (
@@ -41,7 +41,7 @@ export const Reviews = ({ reviews }) => {
             <HStack>
               <Avatar src={review.reviewerAvatar} size="md"></Avatar>
               <Text>{review.reviewer}</Text>
-              <Rating number={review.stars} />
+              {/* <Rating number={review.stars} /> */}
             </HStack>
           </CardFooter>
         </Card>

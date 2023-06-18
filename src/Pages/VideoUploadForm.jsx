@@ -8,15 +8,23 @@ import {FormCheckBox} from "../components/FormCheckBox";
 import {FormSelect} from "../components/FormSelect";
 import { DocumentUpload } from 'iconsax-react';
 import { ActionButton } from '../components/ActionButton';
-import { useCreateAsset, useUpdateAsset } from '@livepeer/react';
+import { useCreateAsset } from '@livepeer/react';
+import { useStorage } from '@thirdweb-dev/react';
+import { saveVideoAsset } from '../utils/SkitStarContract';
 
-export const VideoUploadForm = ({}) => {
+export const VideoUploadForm = ({signer, toaster}) => {
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"];
     const Visibility = ["NFT Collectors", "General"]
-    const MAX_FILE_SIZE = 5000000;
+    const MAX_FILE_SIZE = 50000000;
     const MAX_THUMBNAIL_SIZE = 1000000;
-  const ACCEPTED_IMAGE_TYPES = [
+  const ACCEPTED_VIDEO_TYPES = [
     "video/mp4",
+  ];
+  const ACCEPTED_IMAGE_TYPES = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp"
   ];
 
     const videoUploadSchema = z.object({
@@ -28,10 +36,10 @@ export const VideoUploadForm = ({}) => {
                     .refine((files) => files?.length === 1, "Video is required.")
                     .refine(
                     (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-                    `Max file size is 5MB.`
+                    `Max file size is 50MB.`
                     )
                     .refine(
-                    (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+                    (files) => ACCEPTED_VIDEO_TYPES.includes(files?.[0]?.type),
                     ".mp4 files are accepted."
                     ),
         thumbnail: z
@@ -64,51 +72,74 @@ export const VideoUploadForm = ({}) => {
     ? methods.formState.errors["videoFile"].message
     : "";
 
-    const onSubmit = (values) => {
-        console.log(values);
-    };
-    let thumbnailError = methods.formState.errors["thumbnail"]
+
+    const {
+      mutateAsync: createAsset,
+      data: assets,
+      progress,
+      error,
+    } = useCreateAsset(        
+      (methods.getValues("videoFile")?.[0])
+        ? {
+            sources: [{ name:  methods.getValues("videoFile")?.[0]?.name, file: methods.getValues("videoFile")?.[0] }],
+          }
+        : null
+  );
+
+  let thumbnailError = methods.formState.errors["thumbnail"]
     ? methods.formState.errors["thumbnail"].message
     : "";
-    const {
-        mutate: createAsset,
-        data: assets,
-        progress,
-        error,
-      } = useCreateAsset(        
-        (methods.getValues("videoFile")?.[0])
-          ? {
-              sources: [{ name:  methods.getValues("videoFile")?.[0]?.name, file: methods.getValues("videoFile")?.[0] }],
-            }
-          : null
-    );
 
-    const uploadAsset = async () => {
-        await createAsset?.();
-        assets?.map((asset)=> {
-            console.log(asset);
-        })
+  const uploadAsset = async () => {
+      await createAsset?.();
+      console.log(assets)
+  };
+ 
+  const progressFormatted = useMemo(
+    () =>
+      progress?.[0].phase === 'failed'
+        ? 'Failed to process video.'
+        : progress?.[0].phase === 'waiting'
+        ? 'Video Waiting'
+        : progress?.[0].phase === 'uploading'
+        ? `Video Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
+        : progress?.[0].phase === 'processing'
+        ? `Video Processing: ${Math.round(progress?.[0].progress * 100)}%`
+        : progress?.[0].phase === 'ready'
+        ? `Video Successfully uploaded! Storage in Progress...`
+        : null,
+    [progress],
+);
+
+   const storage = useStorage(); 	
+    const onSubmit = async (values) => {
+       try {
+        await uploadAsset?.()
+          const videoAssetId = await assets[0].id;
+         
+          const thumbnailFi = methods.getValues("thumbnail")?.[0]; 
+          console.log("1")
+          const videoAssetUrl = await storage.upload({
+              "thumbnailUrl": await storage.upload(thumbnailFi, {uploadWithoutDirectory: true}),
+              "title": values.title,
+              "description": values.description,
+              "assetId": videoAssetId,
+              "category": values.category,
+              "visibility": values.visibility,
+              "promotion": values.promotion
+          }, {uploadWithoutDirectory: true}); 
+          console.log("2")
+          await saveVideoAsset(videoAssetUrl, signer);
+          toaster("Successfully uploaded video", "success");
+        
+       } catch (error) {
+        console.log(error);
+        toaster("Error Uploading Video", "error");
+       }
+        
     };
-    const { mutate: updateAsset, status } = useUpdateAsset({
-        // Here we are providing the assetId of the video
-        assetId: assets?.[0].id,
-        // And choose IPFS : true to make sure the video is uploaded to IPFS
-        storage: { ipfs: true },
-      });
-
-    const progressFormatted = useMemo(
-        () =>
-          progress?.[0].phase === 'failed'
-            ? 'Failed to process video.'
-            : progress?.[0].phase === 'waiting'
-            ? 'Waiting'
-            : progress?.[0].phase === 'uploading'
-            ? `Uploading: ${Math.round(progress?.[0]?.progress * 100)}%`
-            : progress?.[0].phase === 'processing'
-            ? `Processing: ${Math.round(progress?.[0].progress * 100)}%`
-            : null,
-        [progress],
-    );
+    
+   
 
   return (
     <Box>
@@ -159,7 +190,7 @@ export const VideoUploadForm = ({}) => {
                         </Text>
                     )}
                 </Center>
-                {/* <FormInput name="title" required/>
+                <FormInput name="title" required/>
                 <FormInput name="description" isTextArea rows="4"/> 
                 <Center
                     w="750px"
@@ -202,21 +233,12 @@ export const VideoUploadForm = ({}) => {
                 </Center>              
                 <FormSelect name="category" options={Categories} />
                 <FormSelect name="visibility" options={Visibility} />
-                <FormCheckBox name="promotion" checkBoxLabel="My video contains paid promotion like a product or sponsporship" /> */}
-                <p>{progressFormatted}</p>
-      {assets?.map((asset) => (
-        <div key={asset.id}>
-          <div>
-            <div>Asset Name: {asset?.name}</div>
-            <div>Playback URL: {asset?.playbackUrl}</div>
-            <div>IPFS CID: {asset?.storage?.ipfs?.cid ?? 'None'}</div>
-          </div>
-        </div>
-      ))}
+                <FormCheckBox name="promotion" checkBoxLabel="My video contains paid promotion like a product or sponsporship" />        
                 <Center>   
-                    <ActionButton label="get" type="" onClick={uploadAsset}/>   
-                    <ActionButton label="upload to ipfs" type="" onClick={() => updateAsset?.()}/>   
-                    {/* <ActionButton label="Upload" type="submit" isLoading={methods.formState.isSubmitting}/>    */}
+                    <ActionButton label="Upload" type="submit" isLoading={methods.formState.isSubmitting}/>
+                    {
+                      methods.formState.isSubmitting && <p>{progressFormatted}</p>
+                    }   
                 </Center>
             </Box>
         </FormProvider>

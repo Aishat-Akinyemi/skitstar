@@ -3,9 +3,7 @@ import { IconButton, Flex, Spacer , Box, Text} from '@chakra-ui/react'
 import { Video, Notification,  } from 'iconsax-react';
 import { ConnectWallet } from '@thirdweb-dev/react';
 
-
-
-export const Nav = () => {
+export const Nav = ({isCreator}) => {
   return (
     <Box mt="34px">
         <Flex>
@@ -25,9 +23,16 @@ export const Nav = () => {
               >
                
                 <Box>Our Mission</Box>
+                <Spacer/>
                 <Box>FAQ</Box>
-                <Box>Become a Creator</Box>
+                {!isCreator &&
+                <>
+                  <Spacer/>
+                 <Box>Become a Creator</Box>
+                </>
+                }
               
+
               </Flex>
             </Box>
             <Spacer/>

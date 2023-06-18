@@ -1,13 +1,15 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+
 import { ThirdwebProvider, metamaskWallet } from "@thirdweb-dev/react";
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import "./styles/globals.css";
 import { EvmosTestnet,   } from "@thirdweb-dev/chains";
-
 import { LivepeerConfig } from '@livepeer/react';
 import LivepeerClient from '../client';
+
+import { BrowserRouter as Router } from "react-router-dom";
 
 
 const colors = {
@@ -21,7 +23,9 @@ const chkraTheme = extendTheme({ colors });
 
 const activeChain={
   chainId: 9000, // Chain ID of the network
-  rpc: ['https://theta-testnet.rpc.thirdweb.com'],
+  rpc: [
+    "https://g.w.lavanet.xyz:443/gateway/evmost/json-rpc-http/06965c657a553db2bcb66f8fd0818633",
+     'https://theta-testnet.rpc.thirdweb.com'],
   nativeCurrency: {
     decimals: 18,
     name: "tEVMOS",
@@ -42,18 +46,20 @@ const livepeerTheme = {
   //   display: 'Inter',
   // },
 };
- 
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
-  <React.StrictMode>
-    <LivepeerConfig client={LivepeerClient} theme={livepeerTheme} >
-        <ThirdwebProvider activeChain={EvmosTestnet} supportedWallets={[ metamaskWallet() ]}>        
-          <ChakraProvider theme={chkraTheme}>
-            <App />
-          </ChakraProvider> 
-        </ThirdwebProvider>
-    </LivepeerConfig>
-  </React.StrictMode>
+  <Router>
+      <React.StrictMode>
+      <LivepeerConfig client={LivepeerClient} theme={livepeerTheme} >
+          <ThirdwebProvider activeChain={activeChain} supportedWallets={[ metamaskWallet() ]}>        
+            <ChakraProvider theme={chkraTheme}>
+              <App />
+            </ChakraProvider> 
+          </ThirdwebProvider>
+      </LivepeerConfig>
+    </React.StrictMode>
+  </Router>
+  
 );

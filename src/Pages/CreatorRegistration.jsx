@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect} from 'react'
 import {Box, Heading, Text, Center, HStack} from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,8 +7,10 @@ import {FormInput} from "../components/FormInput";
 import {FormSelect} from "../components/FormSelect";
 import { DocumentUpload } from 'iconsax-react';
 import { ActionButton } from '../components/ActionButton';
+import { useStorage } from '@thirdweb-dev/react';
+import {skitStarContractReader, registerCreator, } from "../utils/SkitStarContract"
 
-export const CreatorRegistration = () => {
+export const CreatorRegistration = ({signer, address, toaster, setIsCreator}) => {
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"]
     const MAX_FILE_SIZE = 3000000;
   const ACCEPTED_IMAGE_TYPES = [
@@ -20,8 +22,11 @@ export const CreatorRegistration = () => {
     const registrationSchema = z.object({
         name: z.string().min(4, "Brand name should be at least 4 characters").max(20, 
             "Brand name should be maximum 20 characters"),
-        email: z.string().min(1, "Email is required").email("Email is invalid"),
+        symbol: z.string().min(4, "Brand symbol should be at least 4 characters").max(20, 
+            "Brand symbol should be maximum 8 characters"),
+        // email: z.string().min(1, "Email is required").email("Email is invalid"),
         about: z.string().optional(),
+        // royaltyPerc: z.string().optional(),
         profileImage: z
         .any()
         .refine((files) => files?.length === 1, "Image is required.")
@@ -35,22 +40,57 @@ export const CreatorRegistration = () => {
         ),
         category: z.enum(Categories)
                     .refine((val) => Categories.includes(val), "Category is required"),
-        instagramUrl: z.string().url("must be a valid url"),
-        twitterUrl: z.string().url("must be a valid url")
+        instagramUrl: z.string().optional(),
+        twitterUrl: z.string().optional()
     });
 
     const { ...methods } = useForm({
-        resolver: zodResolver(registrationSchema)
+        resolver: zodResolver(registrationSchema), mode: "onBlur",
+        defaultValues: {
+            royaltyPerc: 0
+        }
+
     });
    
     let profileImageError = methods.formState.errors["profileImage"]
     ? methods.formState.errors["profileImage"].message
     : "";
 
-    const onSubmit = (values) => {
-        console.log(values);
-    };
+    //handling actions
+    const storage = useStorage(); 	
+	
+    const onSubmit = async (values) => {
+        try {
+            const file = methods.getValues("profileImage")?.[0]; 
+            const infoUrl = await storage.upload({                
+                "imageUrl": await storage.upload(file, {uploadWithoutDirectory: true}),
+                "name" : values.name,
+                "about": values.about,
+                "instagramUrl": values.instagramUrl,
+                "twitterUrl": values.twitterUrl
+            }, {uploadWithoutDirectory: true}); 			 
+            await registerCreator(
+				values.name,
+				values.symbol,
+				infoUrl,
+				signer
+			);	
 
+            
+        } catch (error) {
+			toaster("Error Registering", "error");
+        }
+    };
+	const filter = skitStarContractReader.filters.creatorJoined(address, null)
+	
+  
+	useEffect(() => {
+		skitStarContractReader.on(filter, (creatorAddress, tokenContractaddress, event) => {		
+			toaster("Congratulation!, you are now a creator on SKITSTAR", "success");		
+		});
+		setIsCreator(true);
+	}, [])
+	
   return (
     <Box>
         <Heading>Register as A Creator</Heading>
@@ -62,7 +102,10 @@ export const CreatorRegistration = () => {
                 onSubmit={methods.handleSubmit(onSubmit)}
             >
                 <FormInput name="name" required/>
-                <FormInput name="email" required />
+                <FormInput name="symbol" required/>
+                {/* <FormInput name="royaltyPerc" 
+                     type="number"                    
+                    placeholder="What % royalty do you want to earn on NFT sales, leave blank if 0" /> */}
                 <FormInput name="about" isTextArea rows="4" required></FormInput>
                 <Center
                     w="750px"
@@ -107,7 +150,7 @@ export const CreatorRegistration = () => {
                 <FormInput name="instagramUrl" label="Instagram Profile Link" required />
                 <FormInput name="twitterUrl" label="Twitter Profile Link" required />
                 <Center gap={5}> 
-                    <ActionButton label="Cancel Registration" colorScheme="gray" />   
+                    <ActionButton label="Cancel Registration" colorScheme="gray"/>   
                     <ActionButton label="Complete Registration" type="submit" isLoading={methods.formState.isSubmitting}/>   
                 </Center>
             </Box>

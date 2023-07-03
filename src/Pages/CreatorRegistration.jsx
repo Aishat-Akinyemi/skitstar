@@ -7,18 +7,21 @@ import {FormInput} from "../components/FormInput";
 import {FormSelect} from "../components/FormSelect";
 import { DocumentUpload } from 'iconsax-react';
 import { ActionButton } from '../components/ActionButton';
-import { useStorage } from '@thirdweb-dev/react';
-import {skitStarContractReader, registerCreator, } from "../utils/SkitStarContract"
+import { useStorage, useContractWrite } from '@thirdweb-dev/react';
+import { useNavigate } from 'react-router-dom';
 
-export const CreatorRegistration = ({signer, address, toaster, setIsCreator}) => {
+export const CreatorRegistration = ({contract, toaster, setIsCreator}) => {
+    /**
+     * Form Definition and validation
+     */
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"]
     const MAX_FILE_SIZE = 3000000;
-  const ACCEPTED_IMAGE_TYPES = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp"
-  ];
+    const ACCEPTED_IMAGE_TYPES = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp"
+    ];
     const registrationSchema = z.object({
         name: z.string().min(4, "Brand name should be at least 4 characters").max(20, 
             "Brand name should be maximum 20 characters"),
@@ -55,9 +58,11 @@ export const CreatorRegistration = ({signer, address, toaster, setIsCreator}) =>
     let profileImageError = methods.formState.errors["profileImage"]
     ? methods.formState.errors["profileImage"].message
     : "";
-
+    //navigation
+    const navigate = useNavigate();
     //handling actions
-    const storage = useStorage(); 	
+    const storage = useStorage(); 
+    const { mutateAsync: registerCreator, isLoading } = useContractWrite(contract, "registerCreator")	
 	
     const onSubmit = async (values) => {
         try {
@@ -68,29 +73,23 @@ export const CreatorRegistration = ({signer, address, toaster, setIsCreator}) =>
                 "about": values.about,
                 "instagramUrl": values.instagramUrl,
                 "twitterUrl": values.twitterUrl
-            }, {uploadWithoutDirectory: true}); 			 
-            await registerCreator(
-				values.name,
-				values.symbol,
-				infoUrl,
-				signer
-			);	
-
-            
+            }, {uploadWithoutDirectory: true}); 
+            try {
+                // const data = await registerCreator({ args: [values.name, values.symbol, infoUrl, _royaltyBps] });
+                //royalty is currently set to zero for the erc1155 token created 
+                const data = await registerCreator({ args: [values.name, values.symbol, infoUrl, 0] });
+                toaster("Congratulation!, you are now a creator on SKITSTAR", "success");
+                setIsCreator(true);
+            } catch (err) {
+                toaster("Error Registering", "error");
+              }   
         } catch (error) {
 			toaster("Error Registering", "error");
+        } finally {
+            navigate(`/profile`);
         }
     };
-	const filter = skitStarContractReader.filters.creatorJoined(address, null)
-	
-  
-	useEffect(() => {
-		skitStarContractReader.on(filter, (creatorAddress, tokenContractaddress, event) => {		
-			toaster("Congratulation!, you are now a creator on SKITSTAR", "success");		
-		});
-		setIsCreator(true);
-	}, [])
-	
+    
   return (
     <Box>
         <Heading>Register as A Creator</Heading>
@@ -151,8 +150,8 @@ export const CreatorRegistration = ({signer, address, toaster, setIsCreator}) =>
                 <FormInput name="twitterUrl" label="Twitter Profile Link" required />
                 <Center gap={5}> 
                     <ActionButton label="Cancel Registration" colorScheme="gray"/>   
-                    <ActionButton label="Complete Registration" type="submit" isLoading={methods.formState.isSubmitting}/>   
-                </Center>
+                    <ActionButton label="Complete Registration" type="submit" isLoading={methods.formState.isSubmitting}  loadingText="Registering..."/>   
+                 </Center>
             </Box>
         </FormProvider>
     </Box>

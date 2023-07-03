@@ -12,26 +12,17 @@ import { EventForm } from './Pages/EventForm';
 import { BuyAdsVoucherForm } from './Pages/BuyAdsVoucherForm';
 import { AboutCreator } from './Pages/AboutCreator';
 import { VideoPlayer } from './components/VideoPlayer';
-import { useConnectionStatus, useSigner } from "@thirdweb-dev/react";
+import { Profile } from './Pages/Profile';
+import { useConnectionStatus, useSigner, useContract } from "@thirdweb-dev/react";
 import { Routes, Route } from "react-router-dom";
-import { useToast } from '@chakra-ui/react'
-import { isACreator, getStar } from './utils/SkitStarContract';
+import { useToast } from '@chakra-ui/react';
+
 export default function App() {
-  const connectionStatus = useConnectionStatus();
-  const signer = useSigner();
+  const connectionStatus = useConnectionStatus();  
+  const { contract: skitStarContract } = useContract(import.meta.env.VITE_SKITSTAR_ADD);
   const toast = useToast();
   const [currentAddress, setcurrentAddress] = useState();
   const [isCreator, setIsCreator] = useState(false);
-  useEffect(() => {
-    if (signer) {
-      signer?.getAddress().then((res)=>{
-     setcurrentAddress(res);
-    }
-      );
-    isACreator(currentAddress).then((res)=>setIsCreator(res))
-    getStar(currentAddress).then((res) => console.log(res))
-  }
-  }, [connectionStatus, currentAddress])
 
   
 
@@ -54,8 +45,9 @@ export default function App() {
                   <Box mt="40px" mb="212px">
                     <Routes>
                       <Route path="/" element={<Home />} />
-                      <Route path='/creator/join' element={<CreatorRegistration signer={signer} address={currentAddress} toaster={toaster} setIsCreator={setIsCreator}/>}/>
-                      <Route path='/creator/upload' element={<VideoUploadForm signer={signer} toaster={toaster}/>}/>
+                      <Route path='/creator/join' element={<CreatorRegistration contract={skitStarContract} toaster={toaster} setIsCreator={setIsCreator}/>}/>
+                      <Route path="/profile" element={<Profile contract={skitStarContract}/>} />
+                      <Route path='/creator/upload' element={<VideoUploadForm  toaster={toaster}  contract={skitStarContract}/>}/>
                     </Routes>
                   </Box>
              </Flex>

@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function getVideoAsset(assetId) {
 
-    const assetUrl = `https://livepeer.studio/api/asset/92e5d42e-1036-4957-ae82-993df97b5828`
+    const assetUrl = `https://livepeer.studio/api/asset/${assetId}`
     const config = {
     method: 'get',
     headers: { 

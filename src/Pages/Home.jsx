@@ -1,9 +1,58 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { Box, Tag, Input, InputGroup, InputLeftElement, HStack, TagLabel, Icon, Heading  } from '@chakra-ui/react'
 import { SearchNormal } from 'iconsax-react'
 import { VideoListGrid } from '../components/VideoListGrid'
+import { useStorage,   useConnectionStatus, useAddress, useContract, useContractRead, useSDK } from "@thirdweb-dev/react";
+import { getVideoAsset } from '../utils/VideoAssets';
 
-export const Home = () => {
+export const Home = ({creatorList}) => {
+  const [videoList, setVideoList] = useState([]);
+  
+const sdk = useSDK();
+const storage = useStorage();
+
+  useEffect(() => {
+    if(creatorList){
+      creatorList.forEach(creatorAddress => {
+        videoAssets(creatorAddress).then((res)=>{
+          let videos = videoList;          
+          setVideoList(videos.push(res));
+          
+          console.log(res);
+        })
+        ;
+      });
+      console.log(videoList);
+      
+    }
+  }, [creatorList])
+ 
+  const videoAssets = async (creatorAddress)=>{
+    const sscontract = await sdk.getContract(import.meta.env.VITE_SKITSTAR_ADD);
+    const creatorInfo = await sscontract.call("getStar",  [creatorAddress]);
+    const videodDta = await sscontract.call("getVideoAssets",  [creatorAddress]);
+    let videoArray  =   []
+    if(creatorInfo    && videodDta.length>0){
+      let creator = {};
+      storage.downloadJSON(creatorInfo.creatorInfoUrl).then(
+        res => {
+          creator.name = res.name;
+          creator.creatorAvatar = res.imageUrl;
+        }
+      );      
+      videodDta.forEach(assetId => {
+        getVideoAsset(assetId).then((res) => {
+          const vid =  {
+            creator: creator,
+            video:  res
+           }
+           videoArray.push(vid)
+        })
+      });
+    }
+    return videoArray;
+  }
+  
   return (
     <Box width="80vw">
       <HStack spacing={4}>

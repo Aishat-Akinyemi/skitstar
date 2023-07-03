@@ -1,252 +1,253 @@
+
 import { ethers } from "ethers";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// const abi = [
-// 	{
-// 		"inputs": [],
-// 		"stateMutability": "nonpayable",
-// 		"type": "constructor"
-// 	},
-// 	{
-// 		"anonymous": false,
-// 		"inputs": [
-// 			{
-// 				"indexed": true,
-// 				"internalType": "address",
-// 				"name": "prevOwner",
-// 				"type": "address"
-// 			},
-// 			{
-// 				"indexed": true,
-// 				"internalType": "address",
-// 				"name": "newOwner",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"name": "OwnerUpdated",
-// 		"type": "event"
-// 	},
-// 	{
-// 		"anonymous": false,
-// 		"inputs": [
-// 			{
-// 				"indexed": true,
-// 				"internalType": "address",
-// 				"name": "creatorAddress",
-// 				"type": "address"
-// 			},
-// 			{
-// 				"indexed": true,
-// 				"internalType": "address",
-// 				"name": "erc1155tokenAddress",
-// 				"type": "address"
-// 			},
-// 			{
-// 				"indexed": false,
-// 				"internalType": "uint256",
-// 				"name": "",
-// 				"type": "uint256"
-// 			}
-// 		],
-// 		"name": "creatorJoined",
-// 		"type": "event"
-// 	},
-// 	{
-// 		"anonymous": false,
-// 		"inputs": [
-// 			{
-// 				"indexed": true,
-// 				"internalType": "address",
-// 				"name": "sender",
-// 				"type": "address"
-// 			},
-// 			{
-// 				"indexed": true,
-// 				"internalType": "address",
-// 				"name": "creator",
-// 				"type": "address"
-// 			},
-// 			{
-// 				"indexed": true,
-// 				"internalType": "uint256",
-// 				"name": "amount",
-// 				"type": "uint256"
-// 			}
-// 		],
-// 		"name": "giftTransferred",
-// 		"type": "event"
-// 	},
-// 	{
-// 		"inputs": [
-// 			{
-// 				"internalType": "address",
-// 				"name": "",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"name": "getStar",
-// 		"outputs": [
-// 			{
-// 				"internalType": "address",
-// 				"name": "ERC1155TokenAddress",
-// 				"type": "address"
-// 			},
-// 			{
-// 				"internalType": "uint256",
-// 				"name": "subscriberCount",
-// 				"type": "uint256"
-// 			},
-// 			{
-// 				"internalType": "uint256",
-// 				"name": "giftBalance",
-// 				"type": "uint256"
-// 			},
-// 			{
-// 				"internalType": "string",
-// 				"name": "creatorInfoUrl",
-// 				"type": "string"
-// 			}
-// 		],
-// 		"stateMutability": "view",
-// 		"type": "function"
-// 	},
-// 	{
-// 		"inputs": [
-// 			{
-// 				"internalType": "address payable",
-// 				"name": "creatorAdd",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"name": "gift",
-// 		"outputs": [],
-// 		"stateMutability": "payable",
-// 		"type": "function"
-// 	},
-// 	{
-// 		"inputs": [],
-// 		"name": "owner",
-// 		"outputs": [
-// 			{
-// 				"internalType": "address",
-// 				"name": "",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"stateMutability": "view",
-// 		"type": "function"
-// 	},
-// 	{
-// 		"inputs": [
-// 			{
-// 				"internalType": "string",
-// 				"name": "_name",
-// 				"type": "string"
-// 			},
-// 			{
-// 				"internalType": "string",
-// 				"name": "_symbol",
-// 				"type": "string"
-// 			},
-// 			{
-// 				"internalType": "string",
-// 				"name": "_infoUrl",
-// 				"type": "string"
-// 			},
-// 			{
-// 				"internalType": "uint128",
-// 				"name": "_royaltyBps",
-// 				"type": "uint128"
-// 			}
-// 		],
-// 		"name": "registerCreator",
-// 		"outputs": [
-// 			{
-// 				"internalType": "address",
-// 				"name": "skitStarAddress",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"stateMutability": "nonpayable",
-// 		"type": "function"
-// 	},
-// 	{
-// 		"inputs": [
-// 			{
-// 				"internalType": "string",
-// 				"name": "assetid",
-// 				"type": "string"
-// 			}
-// 		],
-// 		"name": "saveVideoAsset",
-// 		"outputs": [],
-// 		"stateMutability": "nonpayable",
-// 		"type": "function"
-// 	},
-// 	{
-// 		"inputs": [
-// 			{
-// 				"internalType": "address",
-// 				"name": "_newOwner",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"name": "setOwner",
-// 		"outputs": [],
-// 		"stateMutability": "nonpayable",
-// 		"type": "function"
-// 	},
-// 	{
-// 		"inputs": [
-// 			{
-// 				"internalType": "address",
-// 				"name": "creatorAdd",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"name": "subscribe",
-// 		"outputs": [],
-// 		"stateMutability": "nonpayable",
-// 		"type": "function"
-// 	},
-// 	{
-// 		"inputs": [
-// 			{
-// 				"internalType": "address",
-// 				"name": "",
-// 				"type": "address"
-// 			},
-// 			{
-// 				"internalType": "address",
-// 				"name": "",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"name": "subscriptions",
-// 		"outputs": [
-// 			{
-// 				"internalType": "bool",
-// 				"name": "",
-// 				"type": "bool"
-// 			}
-// 		],
-// 		"stateMutability": "view",
-// 		"type": "function"
-// 	},
-// 	{
-// 		"inputs": [
-// 			{
-// 				"internalType": "address",
-// 				"name": "creatorAdd",
-// 				"type": "address"
-// 			}
-// 		],
-// 		"name": "unSubscribe",
-// 		"outputs": [],
-// 		"stateMutability": "nonpayable",
-// 		"type": "function"
-// 	}
-// ]
+const abi = [
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "prevOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnerUpdated",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "creatorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "erc1155tokenAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "creatorJoined",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "creator",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "giftTransferred",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "getStar",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "ERC1155TokenAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "subscriberCount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "giftBalance",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "creatorInfoUrl",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address payable",
+				"name": "creatorAdd",
+				"type": "address"
+			}
+		],
+		"name": "gift",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_symbol",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_infoUrl",
+				"type": "string"
+			},
+			{
+				"internalType": "uint128",
+				"name": "_royaltyBps",
+				"type": "uint128"
+			}
+		],
+		"name": "registerCreator",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "skitStarAddress",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "assetid",
+				"type": "string"
+			}
+		],
+		"name": "saveVideoAsset",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_newOwner",
+				"type": "address"
+			}
+		],
+		"name": "setOwner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "creatorAdd",
+				"type": "address"
+			}
+		],
+		"name": "subscribe",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "subscriptions",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "creatorAdd",
+				"type": "address"
+			}
+		],
+		"name": "unSubscribe",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]
 
 
 const skitStarContractAddress = "0x324126D0e57F526e7AB5e53e989a75A93b7E0641"

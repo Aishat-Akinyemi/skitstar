@@ -12,7 +12,7 @@ import {
   import { ActionButton } from "./ActionButton";
   
   const Ad = () => {
-    const nativetoken = "EVMOS";
+    const nativetoken = "FTM";
     return (
       <Flex gap="32px">
         {/* <Card w="360px" h="552px"> */}

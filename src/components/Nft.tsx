@@ -8,11 +8,20 @@ import {
   Image,
   Flex,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { ActionButton } from "./ActionButton";
+import { useNFT, useNFTs, useContract } from "@thirdweb-dev/react";
 
 const Nft = () => {
-  const nativetoken = "EVMOS";
+  const nativetoken = "FTM";
+  const { contract } = useContract(
+    "0x5621B19791652C70Ea33bc0a79Ca83F9502b6390"
+  );
+  const { data, isLoading, error } = useNFTs(contract);
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <Flex gap="32px">
       {/* <Card w="360px" h="552px"> */}
@@ -45,7 +54,12 @@ const Nft = () => {
           </Text>
         </Box>
         <Heading>Value</Heading>
-        <ActionButton label="Purchace NFT" width="max-content" />
+        <ActionButton
+          label="Purchase NFT"
+          successMessage=""
+          ErrorMessage=""
+          width="max-content"
+        />
       </Flex>
     </Flex>
   );

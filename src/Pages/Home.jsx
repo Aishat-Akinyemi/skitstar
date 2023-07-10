@@ -6,7 +6,7 @@ import { useStorage,   useConnectionStatus, useAddress, useContract, useContract
 import { getVideoAsset } from '../utils/VideoAssets';
 
 export const Home = ({creatorList}) => {
-  const [videoList, setVideoList] = useState([]);
+  const [videoList, setVideoList] = useState([{}]);
   
 const sdk = useSDK();
 const storage = useStorage();
@@ -15,42 +15,35 @@ const storage = useStorage();
     if(creatorList){
       creatorList.forEach(creatorAddress => {
         videoAssets(creatorAddress).then((res)=>{
-          let videos = videoList;          
+          console.log(res)
+          let videos = videoList; 
+          console.log(videos)         
           setVideoList(videos.push(res));
-          
-          console.log(res);
-        })
-        ;
+        })   ;
       });
       console.log(videoList);
       
     }
-  }, [creatorList])
+  }, [])
  
-  const videoAssets = async (creatorAddress)=>{
+ 
+  const videoAssets = async (creatorAddress)=>{    
     const sscontract = await sdk.getContract(import.meta.env.VITE_SKITSTAR_ADD);
-    const creatorInfo = await sscontract.call("getStar",  [creatorAddress]);
-    const videodDta = await sscontract.call("getVideoAssets",  [creatorAddress]);
-    let videoArray  =   []
-    if(creatorInfo    && videodDta.length>0){
-      let creator = {};
-      storage.downloadJSON(creatorInfo.creatorInfoUrl).then(
-        res => {
-          creator.name = res.name;
-          creator.creatorAvatar = res.imageUrl;
+    const [creatorInfo, videodDta] = await Promise.all([
+      sscontract.call("getStar",  [creatorAddress]),
+      sscontract.call("getVideoAssets",  [creatorAddress])
+    ]);  
+    if(creatorInfo  && videodDta.length>0){
+      const info =   storage.downloadJSON(creatorInfo.creatorInfoUrl);
+      const getVideos = videodDta.map(getVideoAsset);
+      const allVideos =  (Promise.all(getVideos));
+      const videos = await Promise.all([info, allVideos]);
+        return {
+          name: videos[0].name,
+          creatorAvatar : videos[0].imageUrl,
+          videos : videos[1]
         }
-      );      
-      videodDta.forEach(assetId => {
-        getVideoAsset(assetId).then((res) => {
-          const vid =  {
-            creator: creator,
-            video:  res
-           }
-           videoArray.push(vid)
-        })
-      });
     }
-    return videoArray;
   }
   
   return (

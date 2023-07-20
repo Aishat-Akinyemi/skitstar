@@ -78,7 +78,7 @@ export const AdsVoucherForm = ({toaster, erc1155ContractAdd, marketPlaceContract
             }
             console.log(error.message)
         } finally{
-            // navigate("/profile")
+            navigate("/profile");
         }
     };
 

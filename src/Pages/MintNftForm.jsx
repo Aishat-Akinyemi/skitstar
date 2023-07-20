@@ -57,7 +57,6 @@ export const MintNftForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) 
        
     const address = useAddress();
     const storage = useStorage();
-    // const { contract} = useContract(erc1155ContractAdd);
     const { contract } = useContract(
         erc1155ContractAdd, erc1155_abi
     );

@@ -13,17 +13,17 @@ export async function getVideoAsset(assetId) {
 
     try {
         const assetResp = (await axios(assetUrl, config)).data;
+         // console.log(assetResp)
         const videoQueryUrl= `https://livepeer.studio/api/data/views/query?playbackId=${assetResp.playbackId}`;
-        const playbackUrl = `https://livepeer.studio/api/playback/${assetResp.playbackId}`
-        const videoQueryResp = await axios(videoQueryUrl, config);
-        const playbackQeryResp = await axios(playbackUrl, config);
+        const playbackUrl = `https://livepeer.studio/api/playback/${assetResp.playbackId}`;
+        const [videoQueryResp, playbackQeryResp] = await Promise.all([axios(videoQueryUrl, config), axios(playbackUrl, config)]);
         let videoData = {};
         videoData.date = (new Date(assetResp.createdAt).toLocaleDateString());
         videoData.playbackId = assetResp.playbackId;
         videoData.name = assetResp.name;
         videoData.viewCount = videoQueryResp.data[0].viewCount;
         videoData.playtimeMins = videoQueryResp.data[0].playtimeMins;
-        const aspectRatio = playbackQeryResp.data.meta.source[0].width/playbackQeryResp.data.meta.source[0].height
+        const aspectRatio = playbackQeryResp.data.meta.source[0].width / playbackQeryResp.data.meta.source[0].height
         const rounded = Math.round(aspectRatio * 10) / 10;
         let ar;
         switch (rounded) {
@@ -43,6 +43,7 @@ export async function getVideoAsset(assetId) {
             ar=""
         }
         videoData.aspectRatio = ar;
+        // console.log(videoData)
         return videoData;
     } catch (error) {
         

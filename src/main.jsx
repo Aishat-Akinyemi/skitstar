@@ -34,7 +34,9 @@ root.render(
   <Router>
       <React.StrictMode>
       <LivepeerConfig client={LivepeerClient} theme={livepeerTheme} >
-          <ThirdwebProvider activeChain={"fantom-testnet"} supportedWallets={[ metamaskWallet() ]}>        
+          <ThirdwebProvider activeChain={"fantom-testnet"} 
+            clientId={import.meta.env.VITE_THIRDWEB_CLIENT_ID}
+            supportedWallets={[ metamaskWallet() ]}>        
             <ChakraProvider theme={chkraTheme}>
               <App />
             </ChakraProvider> 

@@ -29,12 +29,12 @@ export default function App() {
   // const storage = useStorage(); 
   const { contract: skitStarContract } = useContract(import.meta.env.VITE_SKITSTAR_ADD);
   const { data: creatordata, isLoading: isLoadingCreatordata, error: creatordataError } = useContractRead(skitStarContract, "getStar", [address]);
-  const { contract: marketPlaceContract} = useContract(import.meta.env.VITE_MKTPLACE_ADD);
+  const { contract: marketPlaceContract} = useContract(import.meta.env.VITE_MKTPLACE_ADD, "marketplace-v3");
   const { data: allCreators } = useContractRead(skitStarContract, "getAllCreators");
 
   const toast = useToast();
   const [isCreator, setIsCreator] = useState(false);
-  const tempCreator  =     ["0xeB555a1D554F14c1d052460065f020952614FE72", "0xeB555a1D554F14c1d052460065f020952614FE72"]
+  const tempCreator  =     ["0xeB555a1D554F14c1d052460065f020952614FE72", "0x60FfeF37dd73BE7bF952826879B0DEb45B82f119"]
   // useEffect(() => {
   //   console.log(allCreators)
   // }, [allCreators])
@@ -59,9 +59,10 @@ export default function App() {
                   <Box mt="40px" mb="212px">
                     <Routes>
                       <Route path="/" element={<Home creatorList={tempCreator}/>} />
+                      <Route path="/play/:creatorAddress/:playbackId" element={<VideoPlayer toaster={toaster}/>} />
                       <Route path='/creator/join' element={<CreatorRegistration contract={skitStarContract} toaster={toaster} setIsCreator={setIsCreator}/>}/>
-                      <Route path='/creator' element={<AboutCreator contract={skitStarContract} />}/>
-                      <Route path="/profile" element={<Profile contract={skitStarContract}/>} />
+                      <Route path='/creator/:address' element={<AboutCreator toaster={toaster}  contract={skitStarContract} marketPlaceContract={marketPlaceContract} />}/>
+                      <Route path="/profile" element={<Profile toaster={toaster} contract={skitStarContract} creatordata={creatordata} marketPlaceContract={marketPlaceContract}/>} />
                       <Route path='/creator/upload' element={<VideoUploadForm  toaster={toaster}  contract={skitStarContract}/>}/>
                       <Route path='/creator/mint-nft' element={<MintNftForm  toaster={toaster} erc1155ContractAdd={creatordata ? creatordata.ERC1155TokenAddress :null} marketPlaceContract={marketPlaceContract}/>}/>
                       <Route path='/creator/mint-event-tickets' element={<EventForm  toaster={toaster} erc1155ContractAdd={creatordata ? creatordata.ERC1155TokenAddress :null} marketPlaceContract={marketPlaceContract}/>}/>

@@ -8,72 +8,167 @@ import {
   Image,
   Flex,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ActionButton } from "./ActionButton";
-import { useNFT, useNFTs, useContract } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
 
-const Nft = () => {
-  const nativetoken = "FTM";
-  const { contract } = useContract(
-    "0x5621B19791652C70Ea33bc0a79Ca83F9502b6390"
-  );
-  const { data, isLoading, error } = useNFTs(contract);
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
+const Nft = ({ nft, buy }) => {
+  const address = useAddress();
+  const purchaseToken = async () => {
+    await buy(nft.id, nft.currencyValuePerToken.displayValue);
+  };
   return (
-    <Flex gap="32px">
+    <Flex gap="32px" h="554px">
       {/* <Card w="360px" h="552px"> */}
-      <Card maxW="sm">
+      <Card w="360px">
         <CardBody>
-          <Image
-            src="https://media.licdn.com/dms/image/C4D03AQEYfSMJT3aPAA/profile-displayphoto-shrink_800_800/0/1656793439753?e=2147483647&v=beta&t=xBxxtaFX6MLF0gXAW4OcOlwhJHvQpbrKHNGp7qs-cMU"
-            borderRadius="lg"
-          />
+          <Image src={nft.asset.image} borderRadius="lg" w="324px" h="408px" />
           <Stack mt="6" spacing="3">
-            <Heading size="md">Name</Heading>
+            <Heading size="md">{nft.asset.name}</Heading>
             <Flex direction="row" justifyContent="space-between">
               <Text color="brand.900" fontSize="2xl">
-                450 {nativetoken}
+                {nft.currencyValuePerToken.displayValue}{" "}
+                {nft.currencyValuePerToken.symbol}
               </Text>
-              <Text fontSize="lg">Supply 100</Text>
+              <Text fontSize="lg">Quantity {nft.quantity}</Text>
             </Flex>
-            {/* <Text>Location</Text> */}
           </Stack>
         </CardBody>
       </Card>
-      <Flex direction="column" justifyContent="space-around" w="692px">
-        <Box>
-          <Heading>Description</Heading>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam
-            accusamus quod in neque, quis ullam expedita veritatis rerum, eaque,
-            alias exercitationem omnis fugiat obcaecati facilis pariatur
-            corrupti voluptatum? Fugiat, quis?
-          </Text>
+      <Flex direction="column" justifyContent="space-between" w="692px">
+        <Box mt="6">
+          <Heading fontSize="24px">Description</Heading>
+          <Text>{nft.asset.description}</Text>
         </Box>
-        <Heading>Value</Heading>
-        <ActionButton
-          label="Purchase NFT"
-          successMessage=""
-          ErrorMessage=""
-          width="max-content"
-        />
+        {nft.creatorAddress == address ? (
+          <ActionButton label="Increase NFT Supply" width="max-content" />
+        ) : (
+          <ActionButton
+            onClick={purchaseToken}
+            label="Purchase NFT"
+            width="max-content"
+          />
+        )}
       </Flex>
     </Flex>
   );
 };
 
-const nft = [1, 2, 3, 4, 5];
-const Nfts = () => {
+// const nft = [1, 2, 3, 4, 5];
+const Nfts = ({ nfts, buy }) => {
   return (
     <Flex direction="column" gap="24px">
-      {nft?.map((nft, id) => (
-        <Nft key={id} />
+      {nfts?.map((nft, id) => (
+        <Nft key={id} nft={nft} buy={buy} />
       ))}
     </Flex>
   );
 };
 
 export default Nfts;
+
+let dd = {
+  nfts: [
+    {
+      assetContractAddress: "0x0e7D81b26F618Bd762A4C0DeCf86fa472f4f30D6",
+      currencyContractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      pricePerToken: "1000000000000000000",
+      currencyValuePerToken: {
+        name: "Fantom",
+        symbol: "FTM",
+        decimals: 18,
+        value: {
+          type: "BigNumber",
+          hex: "0x0de0b6b3a7640000",
+        },
+        displayValue: "1.0",
+      },
+      id: "7",
+      tokenId: "0",
+      quantity: "10",
+      startTimeInSeconds: 1689842779,
+      asset: {
+        name: "First nft",
+        description:
+          "This is my first NFT, with it you have access to all my posts.",
+        id: "0",
+        uri: "ipfs://QmemmA22gUauqjyzVG1tmkhZKBVW3iC8VUM3RbEHwreUgQ",
+        type: "nft",
+      },
+      endTimeInSeconds: 2005202562,
+      creatorAddress: "0x60FfeF37dd73BE7bF952826879B0DEb45B82f119",
+      isReservedListing: false,
+      status: 4,
+    },
+  ],
+  events: [
+    {
+      assetContractAddress: "0x0e7D81b26F618Bd762A4C0DeCf86fa472f4f30D6",
+      currencyContractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      pricePerToken: "1000000000000000000",
+      currencyValuePerToken: {
+        name: "Fantom",
+        symbol: "FTM",
+        decimals: 18,
+        value: {
+          type: "BigNumber",
+          hex: "0x0de0b6b3a7640000",
+        },
+        displayValue: "1.0",
+      },
+      id: "8",
+      tokenId: "1",
+      quantity: "11",
+      startTimeInSeconds: 1689843144,
+      asset: {
+        name: "First Event",
+        description:
+          "This is an online event for my fans and for those who are looking for a funtime.",
+        image:
+          "https://ipfs-2.thirdwebcdn.com/ipfs/QmQwfCqidt9FRNDdLpNm2nJLmiYgYXCRjDzFRHBVjAjt3e",
+        id: "1",
+        uri: "ipfs://QmYo3CccrJTqLn6HteHSjmpK8r9dWutBozeZsS1s7EQirS",
+        location: "Online",
+        date: "2023-07-27T09:50",
+        type: "event",
+      },
+      endTimeInSeconds: 2005203032,
+      creatorAddress: "0x60FfeF37dd73BE7bF952826879B0DEb45B82f119",
+      isReservedListing: false,
+      status: 4,
+    },
+  ],
+  ads: [
+    {
+      assetContractAddress: "0x0e7D81b26F618Bd762A4C0DeCf86fa472f4f30D6",
+      currencyContractAddress: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      pricePerToken: "1000000000000000000",
+      currencyValuePerToken: {
+        name: "Fantom",
+        symbol: "FTM",
+        decimals: 18,
+        value: {
+          type: "BigNumber",
+          hex: "0x0de0b6b3a7640000",
+        },
+        displayValue: "1.0",
+      },
+      id: "9",
+      tokenId: "2",
+      quantity: "5",
+      startTimeInSeconds: 1689843742,
+      asset: {
+        name: "30 secs Ads",
+        description:
+          "This Voucher gives you access to post 30secs video ad in one of my videos",
+        id: "2",
+        uri: "ipfs://QmPy2ogdW61tjS37K1xH3Ra7pUcx5EH9N7SXDRno8twXoV",
+        type: "ads",
+      },
+      endTimeInSeconds: 2005203373,
+      creatorAddress: "0x60FfeF37dd73BE7bF952826879B0DEb45B82f119",
+      isReservedListing: false,
+      status: 4,
+    },
+  ],
+};

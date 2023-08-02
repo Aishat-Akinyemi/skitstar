@@ -11,61 +11,75 @@ import {
   } from "@chakra-ui/react";
   import React from "react";
   import { ActionButton } from "./ActionButton";
+  import { useAddress } from "@thirdweb-dev/react";
   
-  const Event = () => {
-    const nativetoken = "FTM";
+  const Event = ({event, buy}) => {
+    const address = useAddress();
+    const purchaseToken = async () => {
+      await buy(event.id, event.currencyValuePerToken.displayValue);
+    }
     return (
-      <Flex gap="32px">
-        {/* <Card w="360px" h="552px"> */}
-        <Card maxW="sm">
-          <CardBody>
+      <Flex gap="32px" height="554px">
+        <Card w="360px">
+                  <CardBody>
             <Image
-              src="https://media.licdn.com/dms/image/C4D03AQEYfSMJT3aPAA/profile-displayphoto-shrink_800_800/0/1656793439753?e=2147483647&v=beta&t=xBxxtaFX6MLF0gXAW4OcOlwhJHvQpbrKHNGp7qs-cMU"
+              src={event.asset.image}
               borderRadius="lg"
+              w="324px" h="408px"
             />
             <Stack mt="6" spacing="3">
-              <Heading size="md">Name</Heading>
+              <Heading size="md">{event.asset.name}</Heading>
               <Flex direction="row" justifyContent="space-between">
                 <Text color="brand.900" fontSize="2xl">
-                  450 {nativetoken}
-                </Text>
-                <Text fontSize="lg">Supply 100</Text>
+                  {event.currencyValuePerToken.displayValue}  {event.currencyValuePerToken.symbol}
+                </Text>                
+                <Text fontSize="lg">Quantity {event.quantity}</Text>
               </Flex>
-              {/* <Text>Location</Text> */}
             </Stack>
           </CardBody>
         </Card>
         <Flex direction="column" justifyContent="space-around" w="692px">
           <Box>
-            <Heading>Description</Heading>
+            <Heading fontSize="24px">Description</Heading>
             <Text>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam
-              accusamus quod in neque, quis ullam expedita veritatis rerum, eaque,
-              alias exercitationem omnis fugiat obcaecati facilis pariatur
-              corrupti voluptatum? Fugiat, quis?
+              {event.asset.description}
             </Text>
           </Box>
           <Box>
-            <Heading>Location</Heading>
+            <Heading fontSize="24px">Date</Heading>
             <Text>
-             Location
+             {new Date(event.asset.date).toLocaleString(undefined, {dateStyle: 'full', timeStyle: 'short'})}        
+
+
             </Text>
           </Box>
-        
-          <ActionButton label="Purchase Event Ticket" width="max-content"/>
+          <Box>
+            <Heading >Location</Heading>
+            <Text>
+             {event.asset.location}
+            </Text>
+          </Box>
+          {
+              event.creatorAddress == address 
+              ?
+              <ActionButton label="Increase Ticket Supply" width="max-content"/>
+              :
+              <ActionButton onClick={purchaseToken} label="Purchase Event Ticket" width="max-content"/>
+          }
+          
         </Flex>
       </Flex>
     );
   };
   
 
-  const event = [1,2,3, 4,5]
-  const Events = () => {
+  // const event = [1,2,3, 4,5]
+  const Events = ({events, buy}) => {
     return (
       <Flex direction="column" gap="24px">
         {
-          event?.map((event, id) => (
-            <Event key={id}/>
+          events?.map((event, id) => (
+            <Event key={id} event={event} buy={buy}/>
           ))
         }
       </Flex>

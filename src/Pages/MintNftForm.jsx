@@ -72,7 +72,7 @@ export const MintNftForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) 
     } = useCreateDirectListing(marketPlaceContract);
     const onSubmit = async(values) => {
         try {
-            const file = methods.getValues("image")?.[0];            
+            const file = methods.getValues("tokenImage")?.[0]; 
             const tokenURI =  await storage.upload({ 
                 "name":values.name,               
                 "image": await storage.upload(file, {uploadWithoutDirectory: true}),

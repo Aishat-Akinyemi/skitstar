@@ -4,29 +4,30 @@ import { SearchNormal } from 'iconsax-react'
 import { VideoListGrid } from '../components/VideoListGrid'
 import { useStorage,   useConnectionStatus, useAddress, useContract, useContractRead, useSDK } from "@thirdweb-dev/react";
 import { getVideoAsset } from '../utils/VideoAssets';
+import { shuffle } from '../utils/utils';
 
 export const Home = ({creatorList}) => {
-  const [videoList, setVideoList] = useState([{}]);
+  const [videoList, setVideoList] = useState([]);
   
 const sdk = useSDK();
 const storage = useStorage();
 
   useEffect(() => {
-    if(creatorList){
-      creatorList.forEach(creatorAddress => {
-        videoAssets(creatorAddress).then((res)=>{
-          console.log(res)
-          let videos = videoList; 
-          console.log(videos)         
-          setVideoList(videos.push(res));
-        })   ;
-      });
-      console.log(videoList);
-      
+    if(creatorList) {       
+      (async () => {
+        const videos = await Promise.all(creatorList.map(videoAssets));
+        const flattenedVideos = videos.reduce((acc, curr)=>  acc.concat(curr), []);
+        setVideoList(shuffle(flattenedVideos));
+      })();
     }
+    
   }, [])
  
- 
+ /**
+  * 
+  * @param {Address} creatorAddress 
+  * @returns an Promise containing an Object with creator's name, creator's Avatar and an array of video 
+  */
   const videoAssets = async (creatorAddress)=>{    
     const sscontract = await sdk.getContract(import.meta.env.VITE_SKITSTAR_ADD);
     const [creatorInfo, videodDta] = await Promise.all([
@@ -36,14 +37,24 @@ const storage = useStorage();
     if(creatorInfo  && videodDta.length>0){
       const info =   storage.downloadJSON(creatorInfo.creatorInfoUrl);
       const getVideos = videodDta.map(getVideoAsset);
-      const allVideos =  (Promise.all(getVideos));
-      const videos = await Promise.all([info, allVideos]);
-        return {
-          name: videos[0].name,
-          creatorAvatar : videos[0].imageUrl,
-          videos : videos[1]
-        }
+      const allVideos =  Promise.all(getVideos);
+      const [infoData, videos] = await Promise.all([info, allVideos]);
+      const videoArr = videos
+        // .filter((video) => video !== undefined)
+        .map((video) => {
+          // if(video){
+            return {
+              ...video,
+              creatorAddress: creatorAddress,
+              creatorName: infoData.name,
+              creatorERC1155TokenAddress: creatorInfo.ERC1155TokenAddress,
+              creatorAvatar: infoData.imageUrl
+            }
+          // } 
+        });
+      return videoArr;
     }
+    return [];
   }
   
   return (
@@ -86,7 +97,7 @@ const storage = useStorage();
           <VideoDisplayCard></VideoDisplayCard>
         }
       } */}
-      <VideoListGrid/>
+      <VideoListGrid videoLists={videoList}/>
     </Box>
   )
 }

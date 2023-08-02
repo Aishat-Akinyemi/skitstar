@@ -36,3 +36,29 @@ export function shuffle(array) {
       ads: adArray
     }
   }
+  export function classifyListingType(listings) {
+    const nftArray = [];
+    const eventArray = [];
+    const adArray = [];
+
+    listings.forEach((item) => {
+      switch (item.asset.type) {
+        case "nft":
+          nftArray.push(item);
+          break;
+        case "event":
+          eventArray.push(item);
+          break;
+        case "ads":
+          adArray.push(item);
+          break;
+        default:
+          break;
+      }
+    });
+    return {
+      nfts: nftArray,
+      events: eventArray,
+      ads: adArray
+    }
+  }

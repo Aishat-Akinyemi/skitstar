@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, useToast } from '@chakra-ui/react'
 import { Web3Button } from "@thirdweb-dev/react";
 
-export const ActionButton = ({label, successMessage, ErrorMessage, ...otherProps}) => {
+export const ActionButton = ({label, ...otherProps}) => {
   const toast = useToast();
   const showToast = (description) => {
         toast({

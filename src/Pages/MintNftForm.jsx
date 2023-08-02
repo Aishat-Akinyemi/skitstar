@@ -10,6 +10,7 @@ import { ActionButton } from '../components/ActionButton';
 import { useStorage, useContract, useAddress,  useContractRead, useMintNFT, useCreateDirectListing} from '@thirdweb-dev/react';
 import { useNavigate } from 'react-router-dom';
 import { erc1155_abi } from '../utils/abi';
+import { stringToEthers } from '../utils/utils';
 
 
 export const MintNftForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) => {
@@ -37,8 +38,12 @@ export const MintNftForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) 
           ".jpg, .jpeg, .png and .webp files are accepted."
         ),  
         amount : z.string(), 
-        description: z.string().optional(),    
-        price: z.string(), 
+        description: z.string().optional(),  
+        price: z.string().min(1, "Price is required")
+            .refine(
+                (value) => typeof(stringToEthers(value)) == 'string' && parseFloat(stringToEthers(value)) > 0,
+                {message: 'Invalid Price'}
+            ),
         saleStatus:  z.boolean().optional(),            
     });
 
@@ -70,6 +75,7 @@ export const MintNftForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) 
     mutateAsync: createDirectListing,
     error: isDirectListingError,
     } = useCreateDirectListing(marketPlaceContract);
+    
     const onSubmit = async(values) => {
         try {
             const file = methods.getValues("tokenImage")?.[0]; 
@@ -88,7 +94,7 @@ export const MintNftForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) 
                 await createDirectListing({
                     assetContractAddress: erc1155ContractAdd,
                     tokenId : tokenId,
-                    pricePerToken: parseInt(values.price),
+                    pricePerToken: stringToEthers(values.price),
                     quantity: parseInt(values.amount)
                 });  
                 toaster("NFT Listed for sale", "success");              

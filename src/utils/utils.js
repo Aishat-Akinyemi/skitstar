@@ -62,3 +62,8 @@ export function shuffle(array) {
       ads: adArray
     }
   }
+
+  export function stringToEthers(value) {
+    const parsedValue = ethers.utils.parseUnits(value) ;
+    return (ethers.utils.formatUnits(parsedValue));   
+  }

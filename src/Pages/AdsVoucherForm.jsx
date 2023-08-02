@@ -10,6 +10,7 @@ import { ActionButton } from '../components/ActionButton';
 import { useStorage, useContract, useAddress,  useContractRead, useMintNFT, useCreateDirectListing} from '@thirdweb-dev/react';
 import { useNavigate } from 'react-router-dom';
 import { erc1155_abi } from '../utils/abi';
+import { stringToEthers } from '../utils/utils';
 
 export const AdsVoucherForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) => {
      //navigation
@@ -17,7 +18,11 @@ export const AdsVoucherForm = ({toaster, erc1155ContractAdd, marketPlaceContract
     const createAdsVoucherSchema = z.object({
         name: z.string().min(4, "Event name should be at least 4 characters").max(20, 
             "Event name should be maximum 20 characters"),
-        price: z.string().min(1, "Price is required"),
+        price: z.string().min(1, "Price is required")
+            .refine(
+                (value) => typeof(stringToEthers(value)) == 'string' && parseFloat(stringToEthers(value)) > 0,
+                {message: 'Invalid Price'}
+            ),
         description: z.string().optional(),
         amount : z.string(),
         saleStatus:  z.boolean().optional(),    
@@ -63,8 +68,8 @@ export const AdsVoucherForm = ({toaster, erc1155ContractAdd, marketPlaceContract
             if(values.saleStatus){
                 await createDirectListing({
                     assetContractAddress: erc1155ContractAdd,
-                    tokenId : tokenId,
-                    pricePerToken: parseInt(values.price),
+                    tokenId : tokenId,                    
+                    pricePerToken: stringToEthers(values.price),
                     quantity: parseInt(values.amount)
                 });  
                 toaster("Ads Voucher Listed for sale", "success");              

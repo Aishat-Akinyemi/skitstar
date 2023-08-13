@@ -66,7 +66,7 @@ export const LandingPage = () => {
                     <VideoDisplayCard/>
                 </Flex>
             </Box>
-            <Box my="32px">
+            <Box my="32px" id="about">
                 <Center>
                     <Heading alignContent="center"
                         fontFamily="Open Sans"
@@ -152,7 +152,7 @@ export const LandingPage = () => {
                     </Center> 
                     <Reviews reviews={revObj}/>
             </Box>
-            <Box  my="32px">
+            <Box  my="32px" id="faq">
                 <Center>
                         <Heading alignContent="center"
                             fontFamily="Open Sans"

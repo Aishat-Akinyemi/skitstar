@@ -55,9 +55,10 @@ export default function App() {
             {
               connectionStatus == "connected" ?
               <Flex minHeight="90vh">
-                 <SideBar/>
+                 <SideBar isCreator={creatordata && !isZeroAddress(creatordata.ERC1155TokenAddress) } />
                   <Box mt="40px" mb="212px">
                     <Routes>
+                      <Route path="/home" element={<LandingPage/>} />
                       <Route path="/" element={<Home creatorList={tempCreator}/>} />
                       <Route path="/play/:creatorAddress/:playbackId" element={<VideoPlayer toaster={toaster}/>} />
                       <Route path='/creator/join' element={<CreatorRegistration contract={skitStarContract} toaster={toaster} setIsCreator={setIsCreator}/>}/>

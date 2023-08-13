@@ -1,5 +1,6 @@
 import React from 'react';
-import { IconButton, Flex, Spacer , Box, Text} from '@chakra-ui/react'
+import {Link as ReactRouterLink } from 'react-router-dom'
+import { IconButton, Flex, Spacer , Box, Text, Link as ChakraLink} from '@chakra-ui/react'
 import { Video, Notification,  } from 'iconsax-react';
 import { ConnectWallet } from '@thirdweb-dev/react';
 
@@ -20,15 +21,14 @@ export const Nav = ({isCreator}) => {
             <Box>
               <Flex alignItems="flex-start" gap="40px" w="377px" h="25px"
                     fontFamily="Open Sans" fontWeight="600" color="#333333"
-              >
-               
-                <Box>Our Mission</Box>
-                <Spacer/>
-                <Box>FAQ</Box>
+              > 
+                <ChakraLink as={ReactRouterLink} to="/home#about">Our Mission</ChakraLink>
+                <Spacer/>  
+                <ChakraLink as={ReactRouterLink} to="/home#faq">FAQ</ChakraLink>
                 {!isCreator &&
                 <>
                   <Spacer/>
-                 <Box>Become a Creator</Box>
+                 <ChakraLink as={ReactRouterLink} to="/creator/join">Become a Creator</ChakraLink>
                 </>
                 }
               

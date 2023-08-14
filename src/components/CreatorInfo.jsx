@@ -35,7 +35,7 @@ const CreatorInfo = ({data, isViewerPersonalInfo}) => {
                 </Menu>
             :
             <>
-                <ActionButton label="Tip" mr="24px"/>
+                <ActionButton label="Tip"  mr="24px"/>
                 <ActionButton label="Subscribe" mr="24px"/>     
             </>
         }          

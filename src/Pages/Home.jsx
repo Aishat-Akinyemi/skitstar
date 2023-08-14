@@ -5,6 +5,7 @@ import { VideoListGrid } from '../components/VideoListGrid'
 import { useStorage,   useConnectionStatus, useAddress, useContract, useContractRead, useSDK } from "@thirdweb-dev/react";
 import { getVideoAsset } from '../utils/VideoAssets';
 import { shuffle } from '../utils/utils';
+import {skitstar_abi } from '../utils/abi'
 
 export const Home = ({creatorList}) => {
   const [videoList, setVideoList] = useState([]);
@@ -29,7 +30,7 @@ const storage = useStorage();
   * @returns an Promise containing an Object with creator's name, creator's Avatar and an array of video 
   */
   const videoAssets = async (creatorAddress)=>{    
-    const sscontract = await sdk.getContract(import.meta.env.VITE_SKITSTAR_ADD);
+    const sscontract = await sdk.getContract(import.meta.env.VITE_SKITSTAR_ADD, skitstar_abi);
     const [creatorInfo, videodDta] = await Promise.all([
       sscontract.call("getStar",  [creatorAddress]),
       sscontract.call("getVideoAssets",  [creatorAddress])

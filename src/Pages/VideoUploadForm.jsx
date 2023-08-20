@@ -9,10 +9,10 @@ import {FormSelect} from "../components/FormSelect";
 import { DocumentUpload } from 'iconsax-react';
 import { ActionButton } from '../components/ActionButton';
 import { useCreateAsset } from '@livepeer/react';
-import { useStorage } from '@thirdweb-dev/react';
+import { useStorage, useContractWrite } from '@thirdweb-dev/react';
 import { saveVideoAsset } from '../utils/SkitStarContract';
 
-export const VideoUploadForm = ({signer, toaster}) => {
+export const VideoUploadForm = ({contract, toaster}) => {
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"];
     const Visibility = ["NFT Collectors", "General"]
     const MAX_FILE_SIZE = 50000000;
@@ -72,7 +72,6 @@ export const VideoUploadForm = ({signer, toaster}) => {
     ? methods.formState.errors["videoFile"].message
     : "";
 
-
     const {
       mutateAsync: createAsset,
       data: assets,
@@ -90,11 +89,6 @@ export const VideoUploadForm = ({signer, toaster}) => {
     ? methods.formState.errors["thumbnail"].message
     : "";
 
-  const uploadAsset = async () => {
-      await createAsset?.();
-      console.log(assets)
-  };
- 
   const progressFormatted = useMemo(
     () =>
       progress?.[0].phase === 'failed'
@@ -112,13 +106,14 @@ export const VideoUploadForm = ({signer, toaster}) => {
 );
 
    const storage = useStorage(); 	
+   const { mutateAsync: saveVideoAsset, isLoading } = useContractWrite(contract, "saveVideoAsset")	
+	
     const onSubmit = async (values) => {
        try {
-        await uploadAsset?.()
-          const videoAssetId = await assets[0].id;
+        await createAsset?.()
+          const videoAssetId = assets?.[0].id;
          
-          const thumbnailFi = methods.getValues("thumbnail")?.[0]; 
-          console.log("1")
+          const thumbnailFi = methods.getValues("thumbnail")?.[0];
           const videoAssetUrl = await storage.upload({
               "thumbnailUrl": await storage.upload(thumbnailFi, {uploadWithoutDirectory: true}),
               "title": values.title,
@@ -128,14 +123,15 @@ export const VideoUploadForm = ({signer, toaster}) => {
               "visibility": values.visibility,
               "promotion": values.promotion
           }, {uploadWithoutDirectory: true}); 
-          console.log("2")
-          await saveVideoAsset(videoAssetUrl, signer);
+          await saveVideoAsset({args: [videoAssetUrl]});
           toaster("Successfully uploaded video", "success");
         
        } catch (error) {
         console.log(error);
+        
         toaster("Error Uploading Video", "error");
        }
+       
         
     };
     

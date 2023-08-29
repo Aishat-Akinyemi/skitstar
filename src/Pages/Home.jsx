@@ -36,12 +36,11 @@ const storage = useStorage();
       sscontract.call("getVideoAssets",  [creatorAddress])
     ]);  
     if(creatorInfo  && videodDta.length>0){
-      const info =   storage.downloadJSON(creatorInfo.creatorInfoUrl);
-      const getVideos = videodDta.map(getVideoAsset);
-      const allVideos =  Promise.all(getVideos);
+      const info =   await storage.downloadJSON(creatorInfo.creatorInfoUrl);
+      const videoInfo = await Promise.all(videodDta.map((videourl) => storage.downloadJSON(videourl))); 
+      const allVideos = Promise.all(videoInfo);
       const [infoData, videos] = await Promise.all([info, allVideos]);
       const videoArr = videos
-        // .filter((video) => video !== undefined)
         .map((video) => {
           // if(video){
             return {

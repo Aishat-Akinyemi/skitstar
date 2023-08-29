@@ -6,23 +6,23 @@ import { VideoListGrid } from '../components/VideoListGrid'
 import Nfts from '../components/Nft'
 import Events from '../components/Events'
 import Ads from '../components/Ads'
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAddress, useStorage, useContractRead, useBuyNow, useValidDirectListings, useContractWrite, useSDK,  } from "@thirdweb-dev/react";
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAddress, useStorage, useContractRead, useBuyNow, useValidDirectListings, useContractWrite, useSDK  } from "@thirdweb-dev/react";
 import { classifyListingType } from '../utils/utils';
 import { ListingType, NATIVE_TOKEN_ADDRESS  } from "@thirdweb-dev/sdk";
 import { utils } from "ethers";
+import { getVideoAsset } from '../utils/VideoAssets';
 
 export const AboutCreator = ({toaster, contract, marketPlaceContract}) => {
 
     //navigation
     const navigate = useNavigate();
     const address = useAddress();   
-    const location = useLocation(); 
     const storage = useStorage();
     const sdk = useSDK();
-    const creatorAddress = (location.state).creatorAddress;    
-    const eRC1155TokenAddress = (location.state).creatorERC1155TokenAddress;    
+    const {address: creatorAddress} = useParams();      
     const  [creatorInfo,  setCreatorInfo]  = useState();
+    const [videoList, setVideoList] = useState([]);
 
     const { data: creatordata, isLoading: isLoadingCreatordata, error: creatordataError } = useContractRead(contract, "getStar", [creatorAddress]);   
     const { data: videoAssets, isLoading: isLoadingVideoAssets, error: videoAssetsError} = useContractRead(contract, "getVideoAssets", [creatorAddress]);
@@ -34,38 +34,73 @@ export const AboutCreator = ({toaster, contract, marketPlaceContract}) => {
         marketPlaceContract,
         {
           seller: creatorAddress, 
-          tokenContract: eRC1155TokenAddress 
+          tokenContract: creatordata?.ERC1155TokenAddress
         }
       );
 
       const [tokenListings, setTokenListings] = useState();
       const { mutateAsync: buyNow, isLoading: isBuyNowLoading, error: isBuyNowError } = useBuyNow(marketPlaceContract);
 
+      const getVideoAssetList = async () => {  
+        console.log(creatorInfo)      
+        if(videoAssets?.length > 0) {
+          const videoInfo = await Promise.all(videoAssets.map((videourl) => storage.downloadJSON(videourl)));
+          
+          const getVideos = videoInfo.map((video) => getVideoAsset(video));
+          const allVideos = await Promise.all(getVideos);
+          const videoArr = allVideos
+            .map((video) => {
+                return {
+                  ...video,
+                  creatorAddress: creatorAddress,
+                  creatorName: creatorInfo?.name,
+                  creatorERC1155TokenAddress: creatorInfo?.ERC1155TokenAddress,
+                  creatorAvatar: creatorInfo?.profileImage
+                } 
+            });
+            console.log(videoArr)
+          return videoArr;
+        }
+        return [];
+      }
+
+      useEffect(() => { 
+        if(address == creatorAddress)  {
+          navigate("/profile");
+        }            
+        let info  = {};  
+        if(creatordata) {     
+        info.subscribers= creatordata.subscriberCount.toNumber();
+        info.about   = '';
+        info.address = creatorAddress;
+        info.postCount = 0;
+        info.ERC1155TokenAddress = creatordata.ERC1155TokenAddress
+        if(videoAssets) {
+            info.postCount=videoAssets.length;
+        }
+        storage.downloadJSON(creatordata.creatorInfoUrl).then((res) => {            
+            info.profileImage = res.imageUrl;
+            info.name =   res.name;
+            info.about =   res.about;   
+            setCreatorInfo(info);                    
+        });                                
+    }
+    }, [creatorAddress, creatordata])
 
     useEffect(() => { 
-      if(address == creatorAddress)  {
-        navigate("/profile");
-      }            
-      let info     = {};  
-      if(creatordata){        
-      info.subscribers= creatordata.subscriberCount.toNumber();
-      info.about   ='';
-      info.address=creatorAddress;
-      info.postCount=0;
-      if(videoAssets){
-        console.log(videoAssets)
-          info.postCount=videoAssets.length;
+      try {
+        getVideoAssetList().then(res => {
+          setVideoList(res)
+        })
+      } catch (error) {
+        console.log(error)
       }
-      setCreatorInfo(info);
-      storage.downloadJSON(creatordata.creatorInfoUrl).then((res) => {            
-          info.profileImage = res.imageUrl;
-          info.name =   res.name;
-          info.about =   res.about;                
-          setCreatorInfo(info);                     
-      });   
-     
-  }
-  }, []);
+  }, [videoAssets, creatorInfo])
+
+
+
+
+    
   useEffect(() => {
     try {
         if(directListings){
@@ -92,42 +127,7 @@ export const AboutCreator = ({toaster, contract, marketPlaceContract}) => {
       toaster("Purchase Failed", "error");
     }  
   }
-  // if (creatordataError) {
-  //   toaster("Error retrieving Profile Info", "error");
-  //   navigate(`/`);
-  // }
-  // return (
-  //   <Box width="79vw" display="flex" flexDirection="column">
-  //       <CreatorInfo/>
-  //       <Tabs variant='enclosed' my="52px" w="75vw">
-  //           <TabList>
-  //             <Tab>About</Tab>
-  //             <Tab>Videos</Tab>
-  //             <Tab>Events</Tab>
-  //             <Tab>NFTs</Tab>
-  //             <Tab>Ads Voucher</Tab>
-  //           </TabList>
-  //           <TabPanels>
-  //             <TabPanel>
-  //               <Text>{temp.about}</Text>
-  //             </TabPanel>
-  //             <TabPanel>
-  //               <VideoListGrid/>
-  //             </TabPanel>
-  //             <TabPanel>
-  //              <Events/>
-  //             </TabPanel>
-  //             <TabPanel>
-  //               <Nfts/>
-  //             </TabPanel>
-  //             <TabPanel>
-  //               <Ads/>
-  //             </TabPanel>
-  //           </TabPanels>
-  //       </Tabs>
-   
-  //   </Box>
-  // )
+
   return (
     <Box width="79vw" display="flex" flexDirection="column">
       
@@ -161,7 +161,7 @@ export const AboutCreator = ({toaster, contract, marketPlaceContract}) => {
                    }
                </TabPanel>
                <TabPanel>
-                   {/* <VideoListGrid  videoAssets={videoAssets}/> */}
+                   <VideoListGrid  videoLists={videoList}/>
                </TabPanel>
                <TabPanel>
                     <Events events={tokenListings?.events} buy={buyToken}/>

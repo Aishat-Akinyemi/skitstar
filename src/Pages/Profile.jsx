@@ -3,53 +3,133 @@ import { Box, Image, VStack, Avatar, HStack, Text, Flex, Spacer,
  import {useEffect,  useState} from 'react'
  import CreatorInfo from '../components/CreatorInfo'
  import { VideoListGrid } from '../components/VideoListGrid'
- import Nfts from '../components/Nft'
- import Events from '../components/Events'
- import Ads from '../components/Ads';
- import { useNavigate } from 'react-router-dom';
+import OwnEvents from '../components/OwnEvents'
+import OwnNfts from '../components/OwnNfts'
+import OwnAdsVoucher from '../components/OwnAdsVoucher'
+ import { useNavigate, useLocation } from 'react-router-dom';
+ import { classifyArrayType, classifyListingType } from '../utils/utils';
+import { useAddress, useStorage, useContractRead, useContractWrite, 
+        useSDK, useValidDirectListings, useContract, useNFTs, useCancelDirectListing, useCreateDirectListing } from "@thirdweb-dev/react"; 
+import { erc1155_abi } from '../utils/abi';
+import { ListingType, NATIVE_TOKEN_ADDRESS  } from "@thirdweb-dev/sdk";
+import { utils } from "ethers";
 
-import { useAddress, useStorage, useContractRead } from "@thirdweb-dev/react";
- 
- export const Profile = ({toaster, contract}) => {
-     //navigation
+
+ export const Profile = ({toaster, contract, creatordata, marketPlaceContract}) => {
+    //navigation
     const navigate = useNavigate();
     const address = useAddress();
     const storage = useStorage();
+    const sdk = useSDK();
     const  [creatorInfo,  setCreatorInfo]  = useState();
-   
-    const { data: creatordata, isLoading: isLoadingCreatordata, error: creatordataError } = useContractRead(contract, "getStar", [address]);
+    const [isLoading, setisLoading] = useState(true);
     const { data: videoAssets, isLoading: isLoadingVideoAssets, error: videoAssetsError} = useContractRead(contract, "getVideoAssets", [address]);
-    
-
-    useEffect(() => {                  
-        let info     = {};      
-        if(creatordata){          
-        info.subscribers= creatordata.subscriberCount.toNumber();
-        info.about   ='';
-        info.address=address;
-        info.postCount=0;
-        if(videoAssets){
-            info.postCount=videoAssets.length;
+    const { contract: tokenContract} = useContract(creatordata?.ERC1155TokenAddress, erc1155_abi);
+    const { data: tokens, isLoading: isTokensLoading, error: isTokensLoadingError } = useNFTs(tokenContract);
+    const [tokenObjects, setTokenObjects] = useState({});
+    const {
+        data: directListings,
+        isLoading: isListingsLoading,
+        error: isListingError,
+      } = useValidDirectListings(
+        marketPlaceContract,
+        {
+          seller: address, 
+          tokenContract: creatordata?.ERC1155TokenAddress 
         }
-        setCreatorInfo(info);
-        storage.downloadJSON(creatordata.creatorInfoUrl).then((res) => {            
-            info.profileImage = res.imageUrl;
-            info.name =   res.name;
-            info.about =   res.about;                
-            setCreatorInfo(info);                     
-        });       
-    }
+      );
+     
+    const {
+    mutateAsync: createDirectListing,
+    isLoading: isCreatingListing,
+    error: isDirectListingError,
+    } = useCreateDirectListing(marketPlaceContract);
+
+    const {
+        mutateAsync: cancelDirectListing,
+        isLoading : isCancellingListing,
+        error: isCancelListingError,
+      } = useCancelDirectListing(marketPlaceContract);
+
+    useEffect(() => { 
+        setisLoading(true); 
+        try {
+            let info     = {};     
+            if(creatordata){        
+            info.subscribers= creatordata.subscriberCount.toNumber();
+            info.about   ='';
+            info.address=address;
+            info.postCount=0;
+            if(videoAssets){
+                info.postCount=videoAssets.length;
+            }
+            setCreatorInfo(info);
+            storage.downloadJSON(creatordata.creatorInfoUrl).then((res) => {            
+                info.profileImage = res.imageUrl;
+                info.name =   res.name;
+                info.about =   res.about;                
+                setCreatorInfo(info);                     
+            });       
+        }
+            
+        } catch (error) {
+            
+        } finally{
+            setisLoading(false);
+        } 
     }, []);
 
-    if (creatordataError) {
-        toaster("Error retrieving Profile Info", "error");
-        navigate(`/`);
-    }
+    
+    useEffect(() => {
+      try {
+        if(tokens && directListings) {
+            const listingMap = {};
+            
+            // Create a mapping of metadata.id to the corresponding objects in tokens
+            for (const listing of directListings) {
+              listingMap[listing?.asset?.id] = listing;
+            }
+
+            const tokensWithListingData = [];
+            
+            for (const token of tokens) {
+              const matchingListing = listingMap[token?.metadata?.id];
+
+              const tokenInfo = {
+              owner: token.owner,
+              metadata: token.metadata,
+              totalSupply: token.supply,
+              currencyContractAddress: matchingListing.currencyContractAddress ?? null,
+              currencyValuePerToken: matchingListing.currencyValuePerToken ?? null,
+              pricePerToken: matchingListing.pricePerToken ?? null,
+              listingId: matchingListing.id ?? null,
+              tokenId: matchingListing.tokenId ?? null,
+              quantity: matchingListing.quantity ?? null,
+              startTimeInSeconds: matchingListing.startTimeInSeconds ?? null,
+              endTimeInSeconds: matchingListing.endTimeInSeconds ?? null,
+              status: matchingListing.status ?? null,
+              contractAddress: creatordata?.ERC1155TokenAddress
+              };
+              tokensWithListingData.push(tokenInfo);
+              setTokenObjects(classifyArrayType(tokensWithListingData));
+              console.log(tokenObjects)
+          }       
+      }         
+      } catch (error) {
+        console.error(error)
+      }
+          
+    }, [tokens, directListings])
+
+    // if (creatordataError) {
+    //     toaster("Error retrieving Profile Info", "error");
+    //     navigate(`/`);
+    // }
    return (
      <Box width="79vw" display="flex" flexDirection="column">
        
     {
-        isLoadingCreatordata  ?
+        isLoading ?
         <>
             <SkeletonCircle size='24' />  
             <Skeleton h="45vh" my="52px"/>
@@ -78,16 +158,16 @@ import { useAddress, useStorage, useContractRead } from "@thirdweb-dev/react";
                     }
                 </TabPanel>
                 <TabPanel>
-                    <VideoListGrid  videoAssets={videoAssets}/>
+                    <VideoListGrid  videoLists={videoAssets} isLoading={isLoadingVideoAssets}/>
                 </TabPanel>
                 <TabPanel>
-                    <Events/>
+                <OwnEvents events={tokenObjects?.events} cancel={cancelDirectListing} create={createDirectListing} toaster={toaster}/>
                 </TabPanel>
                 <TabPanel>
-                    <Nfts/>
+                    <OwnNfts nfts={tokenObjects?.nfts} cancel={cancelDirectListing} create={createDirectListing} toaster={toaster}/>
                 </TabPanel>
                 <TabPanel>
-                    <Ads/>
+                <   OwnAdsVoucher ads={tokenObjects?.ads} cancel={cancelDirectListing} create={createDirectListing} toaster={toaster}/>    
                 </TabPanel>
                 </TabPanels>
             </Tabs>

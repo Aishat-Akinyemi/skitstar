@@ -1,5 +1,6 @@
 import React from 'react'
-import { Box, Image, Button, VStack, Avatar, HStack, Text, Flex, Spacer, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
+import {Link as ReactRouterLink } from 'react-router-dom';
+import { Box, Image, Button, VStack, Avatar, HStack, Text, Flex, Spacer, Menu, MenuButton, MenuList, MenuItem, Link as ChakraLink } from '@chakra-ui/react'
 import { ActionButton } from './ActionButton'
 import { ArrowDown2 } from 'iconsax-react'
 
@@ -27,10 +28,10 @@ const CreatorInfo = ({data, isViewerPersonalInfo}) => {
                 <Menu>
                     <MenuButton as={Button} rightIcon={<ArrowDown2 size="32" color="#FF8A65"/>} colorScheme='purple' borderRadius="44px" p="16px 32px">Create</MenuButton>
                     <MenuList>
-                        <MenuItem as='a' href='/'>Post a Video</MenuItem>
-                        <MenuItem as='a' href='#'>Mint an NFT</MenuItem>
-                        <MenuItem as='a' href='#'>Sell Event Tickets</MenuItem>
-                        <MenuItem as='a' href='#'>Create Ads Voucher</MenuItem>
+                        <MenuItem as={ReactRouterLink} to="/creator/upload">Post a Video</MenuItem>                        
+                        <MenuItem as={ReactRouterLink} to="/creator/mint-nft">Mint an NFT</MenuItem>
+                        <MenuItem as={ReactRouterLink} to="/creator/mint-event-tickets">Sell Event Tickets</MenuItem>
+                        <MenuItem as={ReactRouterLink} to="/creator/mint-ads-voucher">Create Ads Voucher</MenuItem>
                     </MenuList>
                 </Menu>
             :

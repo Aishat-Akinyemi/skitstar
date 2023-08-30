@@ -46,6 +46,7 @@ export default function App() {
       status: status,
       duration: 9000,
       isClosable: true,
+      colorScheme: "purple"
     })
   }
   

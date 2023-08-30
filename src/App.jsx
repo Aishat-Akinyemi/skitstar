@@ -34,7 +34,7 @@ export default function App() {
 
   const toast = useToast();
   const [isCreator, setIsCreator] = useState(false);
-  const tempCreator  =     ["0xeB555a1D554F14c1d052460065f020952614FE72", "0x60FfeF37dd73BE7bF952826879B0DEb45B82f119"]
+  const tempCreator  =     ["0xeB555a1D554F14c1d052460065f020952614FE72", "0xa0A76979Da3a7F39751E37bB85B541eBedA0b5Ba", "0x60FfeF37dd73BE7bF952826879B0DEb45B82f119"]
   // useEffect(() => {
   //   console.log(allCreators)
   // }, [allCreators])
@@ -58,9 +58,9 @@ export default function App() {
                  <SideBar isCreator={creatordata && !isZeroAddress(creatordata.ERC1155TokenAddress) } />
                   <Box mt="40px" mb="212px">
                     <Routes>
-                      <Route path="/home" element={<LandingPage/>} />
+                      <Route path="/home" element={<LandingPage toaster={toaster}/>} />
                       <Route path="/" element={<Home creatorList={tempCreator}/>} />
-                      <Route path="/play/:creatorAddress/:playbackId" element={<VideoPlayer toaster={toaster}/>} />
+                      <Route path="/play/:creatorAddress/:playbackId" element={<VideoPlayer toaster={toaster} contract={skitStarContract}/>} />
                       <Route path='/creator/join' element={<CreatorRegistration contract={skitStarContract} toaster={toaster} setIsCreator={setIsCreator}/>}/>
                       <Route path='/creator/:address' element={<AboutCreator toaster={toaster}  contract={skitStarContract} marketPlaceContract={marketPlaceContract} />}/>
                       <Route path="/profile" element={<Profile toaster={toaster} contract={skitStarContract} creatordata={creatordata} marketPlaceContract={marketPlaceContract}/>} />

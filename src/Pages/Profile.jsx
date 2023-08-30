@@ -11,8 +11,7 @@ import OwnAdsVoucher from '../components/OwnAdsVoucher'
 import { useAddress, useStorage, useContractRead, useContractWrite, 
         useSDK, useValidDirectListings, useContract, useNFTs, useCancelDirectListing, useCreateDirectListing } from "@thirdweb-dev/react"; 
 import { erc1155_abi } from '../utils/abi';
-import { ListingType, NATIVE_TOKEN_ADDRESS  } from "@thirdweb-dev/sdk";
-import { utils } from "ethers";
+import { getVideoAsset } from '../utils/VideoAssets';
 
 
  export const Profile = ({toaster, contract, creatordata, marketPlaceContract}) => {
@@ -20,9 +19,9 @@ import { utils } from "ethers";
     const navigate = useNavigate();
     const address = useAddress();
     const storage = useStorage();
-    const sdk = useSDK();
     const  [creatorInfo,  setCreatorInfo]  = useState();
     const [isLoading, setisLoading] = useState(true);
+    const [videoList, setVideoList] = useState([]);
     const { data: videoAssets, isLoading: isLoadingVideoAssets, error: videoAssetsError} = useContractRead(contract, "getVideoAssets", [address]);
     const { contract: tokenContract} = useContract(creatordata?.ERC1155TokenAddress, erc1155_abi);
     const { data: tokens, isLoading: isTokensLoading, error: isTokensLoadingError } = useNFTs(tokenContract);
@@ -79,7 +78,16 @@ import { utils } from "ethers";
         } 
     }, []);
 
-    
+    useEffect(() => { 
+      try {
+        getVideoAssetList().then(res => {
+          setVideoList(res)
+        })
+      } catch (error) {
+        console.log(error)
+      }
+  }, [videoAssets, creatorInfo])
+
     useEffect(() => {
       try {
         if(tokens && directListings) {
@@ -121,6 +129,28 @@ import { utils } from "ethers";
           
     }, [tokens, directListings])
 
+    const getVideoAssetList = async () => {  
+      if(videoAssets?.length > 0) {
+        const videoInfo = await Promise.all(videoAssets.map((videourl) => storage.downloadJSON(videourl)));          
+        const getVideos = videoInfo.map((video) => getVideoAsset(video));
+        const allVideos = await Promise.all(getVideos);
+        const videoArr = allVideos
+          .map((video) => {
+              return {
+                ...video,
+                creatorAddress: address,
+                creatorName: creatorInfo?.name,
+                creatorERC1155TokenAddress: creatordata?.ERC1155TokenAddress,
+                creatorAvatar: creatorInfo?.profileImage
+              } 
+          });
+          console.log(videoArr)
+        return videoArr;
+      }
+      return [];
+    }
+
+
     // if (creatordataError) {
     //     toaster("Error retrieving Profile Info", "error");
     //     navigate(`/`);
@@ -158,7 +188,7 @@ import { utils } from "ethers";
                     }
                 </TabPanel>
                 <TabPanel>
-                    <VideoListGrid  videoLists={videoAssets} isLoading={isLoadingVideoAssets}/>
+                    <VideoListGrid  videoLists={videoList} isLoading={isLoadingVideoAssets}/>
                 </TabPanel>
                 <TabPanel>
                 <OwnEvents events={tokenObjects?.events} cancel={cancelDirectListing} create={createDirectListing} toaster={toaster}/>

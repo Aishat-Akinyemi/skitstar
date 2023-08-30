@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { Box, Tag, Input, InputGroup, InputLeftElement, HStack, TagLabel, Icon, Heading  } from '@chakra-ui/react'
+import { Box, Tag, Input, InputGroup, InputLeftElement, HStack, TagLabel, Icon, Heading, Spinner, Center  } from '@chakra-ui/react'
 import { SearchNormal } from 'iconsax-react'
 import { VideoListGrid } from '../components/VideoListGrid'
 import { useStorage,   useConnectionStatus, useAddress, useContract, useContractRead, useSDK } from "@thirdweb-dev/react";
@@ -7,21 +7,28 @@ import { getVideoAsset } from '../utils/VideoAssets';
 import { shuffle } from '../utils/utils';
 import {skitstar_abi } from '../utils/abi'
 
-export const Home = ({creatorList}) => {
+export const Home = ({creatorList, toaster}) => {
   const [videoList, setVideoList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
   
 const sdk = useSDK();
 const storage = useStorage();
 
   useEffect(() => {
-    if(creatorList) {       
-      (async () => {
-        const videos = await Promise.all(creatorList.map(videoAssets));
-        const flattenedVideos = videos.reduce((acc, curr)=>  acc.concat(curr), []);
-        setVideoList(shuffle(flattenedVideos));
-      })();
-    }
-    
+    try {
+      setIsLoading(true);
+      if(creatorList) {       
+        (async () => {
+          const videos = await Promise.all(creatorList.map(videoAssets));
+          const flattenedVideos = videos.reduce((acc, curr)=>  acc.concat(curr), []);
+          setVideoList(shuffle(flattenedVideos));
+        })();
+      }
+    } catch (error) {
+      console.log(error)
+    } finally{
+      setIsLoading(false);
+    }   
   }, [])
  
  /**
@@ -29,7 +36,7 @@ const storage = useStorage();
   * @param {Address} creatorAddress 
   * @returns an Promise containing an Object with creator's name, creator's Avatar and an array of video 
   */
-  const videoAssets = async (creatorAddress)=>{    
+  const videoAssets = async (creatorAddress)=>{  
     const sscontract = await sdk.getContract(import.meta.env.VITE_SKITSTAR_ADD, skitstar_abi);
     const [creatorInfo, videodDta] = await Promise.all([
       sscontract.call("getStar",  [creatorAddress]),
@@ -38,19 +45,17 @@ const storage = useStorage();
     if(creatorInfo  && videodDta.length>0){
       const info =   await storage.downloadJSON(creatorInfo.creatorInfoUrl);
       const videoInfo = await Promise.all(videodDta.map((videourl) => storage.downloadJSON(videourl))); 
-      const allVideos = Promise.all(videoInfo);
-      const [infoData, videos] = await Promise.all([info, allVideos]);
-      const videoArr = videos
+      const getVideos = videoInfo.map((video) => getVideoAsset(video));
+      const allVideos = await Promise.all(getVideos);
+      const videoArr = allVideos
         .map((video) => {
-          // if(video){
             return {
               ...video,
               creatorAddress: creatorAddress,
-              creatorName: infoData.name,
+              creatorName: info.name,
               creatorERC1155TokenAddress: creatorInfo.ERC1155TokenAddress,
-              creatorAvatar: infoData.imageUrl
+              creatorAvatar: info.imageUrl
             }
-          // } 
         });
       return videoArr;
     }
@@ -92,12 +97,14 @@ const storage = useStorage();
         </InputGroup>          
       </Box>
       <Heading my="24px">Trending Videos</Heading >
-      {/* {
-        for (let index = 0; index < 9; index++) {
-          <VideoDisplayCard></VideoDisplayCard>
-        }
-      } */}
-      <VideoListGrid videoLists={videoList}/>
+      {
+        isLoading && videoList.length > 0
+        ?
+        <Center><Spinner size='xl' colorScheme='purple' speed='0.60s' thickness='5px'/></Center>          
+        :
+        <VideoListGrid videoLists={videoList}/> 
+      }
+       
     </Box>
   )
 }

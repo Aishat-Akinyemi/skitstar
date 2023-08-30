@@ -9,7 +9,7 @@ import {FormSelect} from "../components/FormSelect";
 import { DocumentUpload } from 'iconsax-react';
 import { ActionButton } from '../components/ActionButton';
 import { useCreateAsset } from '@livepeer/react';
-import { useStorage, useContractWrite } from '@thirdweb-dev/react';
+import { useStorage, useContractWrite, useAddress } from '@thirdweb-dev/react';
 import { saveVideoAsset } from '../utils/SkitStarContract';
 
 export const VideoUploadForm = ({contract, toaster}) => {
@@ -71,16 +71,27 @@ export const VideoUploadForm = ({contract, toaster}) => {
     let videoFileError = methods.formState.errors["videoFile"]
     ? methods.formState.errors["videoFile"].message
     : "";
-
+    const address = useAddress();
     const {
       mutateAsync: createAsset,
       data: assets,
       progress,
       error,
+      isError,
+      isIdle,
+      isLoading: isLoadingAsset,
+      isSuccess,
+      status
+      
+    
     } = useCreateAsset(        
       (methods.getValues("videoFile")?.[0])
         ? {
-            sources: [{ name:  methods.getValues("videoFile")?.[0]?.name, file: methods.getValues("videoFile")?.[0] }],
+            sources: [
+              { name:  methods.getValues("videoFile")?.[0]?.name, 
+                file: methods.getValues("videoFile")?.[0],
+                creatorId: address
+              }],
           }
         : null
   );
@@ -110,9 +121,8 @@ export const VideoUploadForm = ({contract, toaster}) => {
 	
     const onSubmit = async (values) => {
        try {
-        await createAsset?.()
-          const videoAssetId = assets?.[0].id;
-         
+        const videoAssetId = (await createAsset?.())[0].id
+        console.log(videoAssetId);       
           const thumbnailFi = methods.getValues("thumbnail")?.[0];
           const videoAssetUrl = await storage.upload({
               "thumbnailUrl": await storage.upload(thumbnailFi, {uploadWithoutDirectory: true}),
@@ -125,18 +135,13 @@ export const VideoUploadForm = ({contract, toaster}) => {
           }, {uploadWithoutDirectory: true}); 
           await saveVideoAsset({args: [videoAssetUrl]});
           toaster("Successfully uploaded video", "success");
-        
+          //TODO ADD NAV        
        } catch (error) {
-        console.log(error);
-        
+        console.log(error);        
         toaster("Error Uploading Video", "error");
        }
-       
-        
     };
     
-   
-
   return (
     <Box>
         <Heading>Video Details</Heading>

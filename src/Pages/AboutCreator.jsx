@@ -26,6 +26,27 @@ export const AboutCreator = ({toaster, contract, marketPlaceContract}) => {
 
     const { data: creatordata, isLoading: isLoadingCreatordata, error: creatordataError } = useContractRead(contract, "getStar", [creatorAddress]);   
     const { data: videoAssets, isLoading: isLoadingVideoAssets, error: videoAssetsError} = useContractRead(contract, "getVideoAssets", [creatorAddress]);
+    const { mutateAsync: subscribe } = useContractWrite(contract, "subscribe");
+    const { mutateAsync: unSubscribe } = useContractWrite(contract, "unSubscribe")
+    const { data: isSubscribed } = useContractRead(contract, "subscriptions", [address, creatorAddress]);
+
+    const subscribeToCreator = async () => {
+      try {
+        const data = await subscribe({ args: [creatorAddress] });
+        toaster("Subscribed", "success")
+      } catch (err) {
+        toaster("Error Subscribing", "error")
+      }
+  }
+  const unSubscribeFromCreator = async () => {
+      try {            
+        const data = await unSubscribe({ args: [creatorAddress] });
+        toaster("Unubscribed", "success")
+      } catch (err) {        
+        toaster("Error Unsubscribing", "error")
+      }
+    }
+    
     const {
         data: directListings,
         isLoading: isListingsLoading,
@@ -42,10 +63,8 @@ export const AboutCreator = ({toaster, contract, marketPlaceContract}) => {
       const { mutateAsync: buyNow, isLoading: isBuyNowLoading, error: isBuyNowError } = useBuyNow(marketPlaceContract);
 
       const getVideoAssetList = async () => {  
-        console.log(creatorInfo)      
         if(videoAssets?.length > 0) {
-          const videoInfo = await Promise.all(videoAssets.map((videourl) => storage.downloadJSON(videourl)));
-          
+          const videoInfo = await Promise.all(videoAssets.map((videourl) => storage.downloadJSON(videourl)));          
           const getVideos = videoInfo.map((video) => getVideoAsset(video));
           const allVideos = await Promise.all(getVideos);
           const videoArr = allVideos
@@ -141,7 +160,7 @@ export const AboutCreator = ({toaster, contract, marketPlaceContract}) => {
        <>
           {
           creatorInfo &&
-          <CreatorInfo data={creatorInfo} isViewerPersonalInfo={false}/>
+          <CreatorInfo data={creatorInfo} isViewerPersonalInfo={address === creatorAddress} subscribe={subscribeToCreator} unsubscribe={unSubscribeFromCreator} isSubscribed={isSubscribed} />
           }
            <Tabs variant='enclosed' my="52px" w="75vw">
                <TabList>

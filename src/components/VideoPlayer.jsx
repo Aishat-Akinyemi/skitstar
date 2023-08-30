@@ -10,7 +10,7 @@ import { BigNumber } from 'ethers';
 
 
 
-export const VideoPlayer = ({contract}) => {
+export const VideoPlayer = ({contract, toaster}) => {
     const temp = { thumbnail: "https://www.techsmith.com/blog/wp-content/uploads/2019/06/YouTube-Thumbnail-Sizes.png"};
     const address = useAddress();
     const location = useLocation();
@@ -31,22 +31,21 @@ export const VideoPlayer = ({contract}) => {
    
     const subscribeToCreator = async () => {
         try {
-            console.log('ggggg')
           const data = await subscribe({ args: [creatorAddress] });
-          console.info("contract call successs", data);
+          toaster("Subscribed", "success")
         } catch (err) {
           console.error("contract call failure", err);
         }
     }
     const unSubscribeFromCreator = async () => {
-        try {
-            
+        try {            
           const data = await unSubscribe({ args: [creatorAddress] });
-          console.info("contract call successs", data);
-        } catch (err) {
-          console.error("contract call failure", err);
+          toaster("Unsubscribed", "success")
+        } catch (err) {    
+            toaster("Error Unsubscribing", "error")
         }
       }
+
     const getAndSetVideoDetails = async () => {
         if(videoDetails?.creatorAddress == address){            
             return setIsInaccessible(false)

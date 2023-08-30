@@ -3,8 +3,13 @@ import {Link as ReactRouterLink } from 'react-router-dom';
 import { Box, Image, Button, VStack, Avatar, HStack, Text, Flex, Spacer, Menu, MenuButton, MenuList, MenuItem, Link as ChakraLink } from '@chakra-ui/react'
 import { ActionButton } from './ActionButton'
 import { ArrowDown2 } from 'iconsax-react'
+import { useConnectionStatus, useAddress, useContract, useContractRead, useContractWrite } from "@thirdweb-dev/react";
 
-const CreatorInfo = ({data, isViewerPersonalInfo}) => {
+
+
+const CreatorInfo = ({data, isViewerPersonalInfo, subscribe, unsubscribe, isSubscribed}) => {
+    
+
   return (
     <Flex minWidth='max-content' alignItems='center' gap='2'>
         <Avatar size="xl" name={data.name} src={data.profileImage}></Avatar>
@@ -36,8 +41,21 @@ const CreatorInfo = ({data, isViewerPersonalInfo}) => {
                 </Menu>
             :
             <>
-                <ActionButton label="Tip"  mr="24px"/>
-                <ActionButton label="Subscribe" mr="24px"/>     
+                {/* <ActionButton label="Tip"  mr="24px" 
+                /> */}
+               {
+                isSubscribed 
+                ?                
+                <ActionButton label="Unsubscribe" mr="24px" onClick={(e) => {
+                    e.preventDefault();
+                    unsubscribe();
+                }}/>
+                :
+                <ActionButton label="Subscribe" mr="24px" onClick={(e) => {
+                    e.preventDefault();
+                    subscribe();
+                }}/>  
+               }     
             </>
         }          
         

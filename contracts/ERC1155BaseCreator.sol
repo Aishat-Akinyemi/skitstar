@@ -27,6 +27,7 @@ contract ERC1155BaseCreator is Ownable {
         uint128 _royaltyBps
     ) external onlyOwner returns (address skitStarAddress) {
         ERC1155Base newStarContract = new ERC1155Base(
+            _owner,
             _name,
             _symbol,
             _owner,

@@ -5,7 +5,7 @@ import App from "./App";
 import { ThirdwebProvider, metamaskWallet } from "@thirdweb-dev/react";
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import "./styles/globals.css";
-import { EvmosTestnet,   } from "@thirdweb-dev/chains";
+import { Mumbai   } from "@thirdweb-dev/chains";
 import { LivepeerConfig } from '@livepeer/react';
 import LivepeerClient from '../client';
 
@@ -34,7 +34,7 @@ root.render(
   <Router>
       <React.StrictMode>
       <LivepeerConfig client={LivepeerClient} theme={livepeerTheme} >
-          <ThirdwebProvider activeChain={"fantom-testnet"} 
+          <ThirdwebProvider activeChain={Mumbai} 
             clientId={import.meta.env.VITE_THIRDWEB_CLIENT_ID}
             supportedWallets={[ metamaskWallet() ]}>        
             <ChakraProvider theme={chkraTheme}>

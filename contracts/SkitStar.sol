@@ -133,14 +133,13 @@ contract SkitStar is Ownable {
         return getStar[creatorAddress].videoAssets;
     }
 
-    function getAllCreators() external view returns (Creator[] memory) {
+    function getAllCreators() external view returns (address[] memory) {
         uint256 length = allStars.length;
-        Creator[] memory creators = new Creator[](length);
+        address[] memory creators;
 
         for (uint256 i = 0; i < length; i++) {
-            creators[i] = getStar[allStars[i]];
+            creators[i] = allStars[i];
         }
-
         return creators;
     }
 

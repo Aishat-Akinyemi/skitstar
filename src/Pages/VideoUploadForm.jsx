@@ -11,6 +11,7 @@ import { ActionButton } from '../components/ActionButton';
 import { useCreateAsset } from '@livepeer/react';
 import { useStorage, useContractWrite, useAddress } from '@thirdweb-dev/react';
 import { saveVideoAsset } from '../utils/SkitStarContract';
+import { useNavigate } from 'react-router-dom';
 
 export const VideoUploadForm = ({contract, toaster}) => {
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"];
@@ -116,7 +117,8 @@ export const VideoUploadForm = ({contract, toaster}) => {
     [progress],
 );
 
-   const storage = useStorage(); 	
+   const storage = useStorage(); 
+   const navigate = useNavigate();	
    const { mutateAsync: saveVideoAsset, isLoading } = useContractWrite(contract, "saveVideoAsset")	
 	
     const onSubmit = async (values) => {
@@ -139,6 +141,8 @@ export const VideoUploadForm = ({contract, toaster}) => {
        } catch (error) {
         console.log(error);        
         toaster("Error Uploading Video", "error");
+       } finally {
+        navigate(`/profile`);
        }
     };
     

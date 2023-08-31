@@ -86,7 +86,7 @@ export const CreatorRegistration = ({contract, toaster, setIsCreator}) => {
         } catch (error) {
 			toaster("Error Registering", "error");
         } finally {
-            navigate(`/profile`);
+            navigate(`/`);
         }
     };
     

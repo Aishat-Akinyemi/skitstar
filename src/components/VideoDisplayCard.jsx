@@ -3,13 +3,13 @@ import {useState, useEffect} from 'react'
 import PressPlayBro from "../assets/PressPlayBro.svg"
 import { VideoPlayer } from './VideoPlayer'
 import { useNavigate } from 'react-router-dom'
-import { useAddress, useContract, useNFTBalance, useSDK } from "@thirdweb-dev/react";
+import { useAddress, useContract, useNFTBalance, useSDK, useDirectListing } from "@thirdweb-dev/react";
 import { erc1155_abi } from '../utils/abi';
 import { BigNumber } from 'ethers';
 import { ActionButton } from './ActionButton';
 import { Lock, WalletMoney } from 'iconsax-react';
 
-export const VideoDisplayCard = ({video, isLoading}) => {
+export const VideoDisplayCard = ({video, isLoading, buy}) => {
     let temp = {thumbnail :"https://www.techsmith.com/blog/wp-content/uploads/2019/06/YouTube-Thumbnail-Sizes.png", 
    }
     const sdk = useSDK(); 
@@ -88,7 +88,10 @@ export const VideoDisplayCard = ({video, isLoading}) => {
             >
                 <Lock size="32" color="#FF8A65" variant="Bold"/>
                 <Text>Buy NFT to Unlock</Text>
-                <ActionButton label="Buy NFT"/>
+                <ActionButton label="Buy NFT" onClick={(e) => {
+                    e.preventDefault();
+                    buy(video.creatorAddress)
+                }}/>
             </Flex>
             :       
             <Image 

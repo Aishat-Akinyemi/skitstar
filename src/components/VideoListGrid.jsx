@@ -2,13 +2,9 @@ import { SimpleGrid, Text } from '@chakra-ui/react'
 import React, {useEffect, useState} from 'react'
 import { VideoDisplayCard } from './VideoDisplayCard'
 
-export const VideoListGrid = ({videoLists, isLoading}) => {  
+export const VideoListGrid = ({videoLists, buy}) => {  
 
-  if(isLoading) {
-    return <>Loading</>
-  }
-
-  return (
+ return (
     <>
       {
         videoLists.length > 0 
@@ -19,7 +15,7 @@ export const VideoListGrid = ({videoLists, isLoading}) => {
                 (
                   video 
                   &&
-                  <VideoDisplayCard video={video} key={ind}/>
+                  <VideoDisplayCard video={video} key={ind} buy={buy}/>
                 )
               ))
             }

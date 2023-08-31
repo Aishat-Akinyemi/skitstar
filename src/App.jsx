@@ -32,13 +32,9 @@ export default function App() {
   const { contract: marketPlaceContract} = useContract(import.meta.env.VITE_MKTPLACE_ADD, "marketplace-v3");
   const { data: allCreators } = useContractRead(skitStarContract, "getAllCreators");
 
+
   const toast = useToast();
-  const [isCreator, setIsCreator] = useState(false);
-  const tempCreator  =     ["0xeB555a1D554F14c1d052460065f020952614FE72", "0xa0A76979Da3a7F39751E37bB85B541eBedA0b5Ba", "0x60FfeF37dd73BE7bF952826879B0DEb45B82f119"]
-  // useEffect(() => {
-  //   console.log(allCreators)
-  // }, [allCreators])
-  
+  const [isCreator, setIsCreator] = useState(false); 
 
   function toaster(message, status) {
    if(status==="success") {
@@ -68,7 +64,7 @@ export default function App() {
                   <Box mt="40px" mb="212px">
                     <Routes>
                       <Route path="/home" element={<LandingPage toaster={toaster}/>} />
-                      <Route path="/" element={<Home creatorList={tempCreator} toaster={toaster}  marketPlaceContract={marketPlaceContract}/>} />
+                      <Route path="/" element={<Home creatorList={allCreators} toaster={toaster}  marketPlaceContract={marketPlaceContract}/>} />
                       <Route path="/play/:creatorAddress/:playbackId" element={<VideoPlayer toaster={toaster} contract={skitStarContract}/>} />
                       <Route path='/creator/join' element={<CreatorRegistration contract={skitStarContract} toaster={toaster} setIsCreator={setIsCreator}/>}/>
                       <Route path='/creator/:address' element={<AboutCreator toaster={toaster}  contract={skitStarContract} marketPlaceContract={marketPlaceContract} />}/>

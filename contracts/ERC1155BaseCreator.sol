@@ -34,7 +34,6 @@ contract ERC1155BaseCreator is Ownable {
             _royaltyBps
         );
         skitStarAddress = address(newStarContract);
-        ERC1155Base(skitStarAddress).setOwner(_owner);
         allStarAddresses.push(skitStarAddress);
         getStarsContract[_owner] = address(skitStarAddress);
         emit CreatorRegistered(

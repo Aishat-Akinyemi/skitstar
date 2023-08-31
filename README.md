@@ -1,47 +1,67 @@
-## Inspiration
+We want to revolutionize the comedy industry by providing a decentralised video platform and marketplace for both comedians to connect to their fans.  
 
-The inspiration behind the Skitstars project stems from our desire to revolutionize the comedy industry and provide a comprehensive platform for both comedians and comedy enthusiasts. Comedy has always been a powerful tool for entertainment, bringing joy and laughter to people's lives. However, traditional avenues for comedians to showcase their talent and connect with their audience have often been limited. Our team recognized the untapped potential of merging comedy, technology, and blockchain innovation. We envisioned a platform that would empower comedians to reach a global audience, monetize their content effectively, sell advertising vouchers and establish stronger connections with their fans.
+Everyone loves comedy, and there is a boom in the social media comedy skit makers in Nigeria, the creators with a huge fan base generate money from sponsored posts and ads, while the upcoming creators struggle. Our team recognized the untapped potential of merging comedy, technology, and blockchain innovation. We envisioned a platform to empower comedians to reach a global audience, gain control over the monetization of their content, and establish stronger connections with their fans.
 
-## What it does
+With **Skitstars**, rising skit makers and the already big talents now have access to a censorship-free platform where they can share their skits, grow their audience and enjoy fan loyalty.
 
-Skitstars is a comedy streaming platform that offers a range of features and services to both comedians (referred to as creators) and comedy enthusiasts (referred to as users). Here's an overview of what Skitstars does:
+ There are various avenues for monetization for them: token-gated videos, and with the in-built marketplace of NFTs, Event Tickets and Ads Vouchers, everyone is sure to benefit from their content and own it in the truest sense of ownership. 
 
-**Comedy Streaming**: Skitstars is a comedy streaming platform where users can watch comedy performances from their favorite comedians. The videos are stored on Livepeer, a decentralised streaming protocol that supports the streaming of both live videos and on-demand videos.
+### Features
 
-**Event Ticket Sales**: Users can purchase comedy event tickets through Skitstars, which come with an NFT serving as a gate pass to live comedy performances.
+ **Comedy skit uploads:** skit creators can upload their skits and can choose to either token gate or make them accessible to everyone. Thereby having complete control over their contents.
 
-**NFT Marketplace**: Skitstars features an NFT marketplace where creators can sell unique NFTs that act as membership cards, granting exclusive access to content not available to the public or non-members.
+********************************Subscription:******************************** Fans can subscribe to their favourite  skit creators.
+
+************Token-Minting:************ Event tickets, NFTs, Ads Vouchers are all NFTs that a creator can mint on their profile.
+
+****************Marketplace:**************** All tokens minted on the platform can be bought on Skitstar without the need for a third-party application. This way we ensure a seamless user experience for our users. 
+
+**Event Ticket Sales:** Users can purchase comedy event tickets through Skitstars, which come with an NFT serving as a gate pass to virtual or IRL comedy performances.
 
 **Advertising Vouchers**: Skitstars provides advertising vouchers that creators can sell to businesses or sponsors, enabling them to promote their products.
 
-**Platform Monetization**: All transactions within the platform are conducted using FTM. Fans gift creators using TNT 20 token called SKTSTR, adding an additional layer of efficiency and security to the payment system. To generate revenue, Skitstars charges creators a joining fee to access the platform's features and services. Also, Skitstars charges creators a fee on the sale of NFTs, advertising vouchers, and event tickets.
+********************************************************Assets Management Dashboard:******************************************************** a creator can view all of their assets: videos and NFTs on Skitstar.
 
 **Monetization for Creators**: Skitstars offers multiple revenue streams for creators, including event ticket sales, NFT sales, and advertising voucher sales.
 
+## Business Model
+
+- Platform fees on token sales on Skitstar
+- With time, unlimited video uploads will come at a premium
+- SKTSTR ERC20 token for Tipping creators, and this will late expand to in-dapp purchases in the future
+
 ## How we built it
 
-To build SkitStars, our team followed a structured approach that involved research, design, and development. We began by conducting thorough secondary research to gain insights into our potential users and identify areas for improvement in the comedy industry. This research helped us understand user preferences, market trends, and competitor offerings.
+We began by conducting research to gain insights into our potential users and identify areas for improvement in the comedy industry. This research helped us understand user preferences, market trends, and competitor offerings.
 
-Based on the insights gathered, we proceeded to design the platform. We started with the creation of high-fidelity wireframes, which allowed us to visualize the user interface, information architecture, and user flows. These wireframes served as a blueprint for the development process.
+Based on the insights gathered, we proceeded to design the platform. We started with the creation of high-fidelity wireframes, which allowed us to visualize the user interface, information architecture, and user flows. 
 
-We developed the smart contract infrastructure required for the integration of NFTs within SkitStars. This involved understanding blockchain technology, designing the contract logic, and implementing it using Solidity. For the front-end development, we used React.
+This requirements analysis phase informed the systems design and development.
 
-## Challenges we ran into
+### Tech Stack
 
-During the development of SkitStars, the team faced several challenges that required overcoming. These challenges included the complex integration of NFTs into the platform, requiring deep understanding of blockchain technology and collaboration with experts. Scalability and performance were critical concerns due to the global audience, necessitating careful optimization and infrastructure planning. Designing monetization models that provided value to users while ensuring fair income for creators was another challenge. Despite these obstacles, the team remained resilient, employing collaborative problem-solving, research, and iteration to successfully address the challenges and create SkitStars—a groundbreaking comedy streaming platform that empowers comedians and entertains comedy enthusiasts worldwide.
+Solidity 
 
-## Accomplishments that we're proud of
+Thirdweb SDKs
 
-We are proud of the accomplishments we have achieved with our SkitStars MVP. Firstly, we successfully developed the core functionality of SkitStars within the limited timeframe of the hackathon. This involved implementing features such as watching comedy content, purchasing event tickets, and engaging with creators.
+React, Vite
 
-We are particularly proud of our integration of NFTs into the MVP. Despite its complexity, we were able to incorporate NFTs to issue event tickets and create membership cards, showcasing our understanding and utilisation of blockchain technology. Creating a user-friendly and intuitive interface was another accomplishment. We focused on delivering a seamless user experience, with clear navigation and an engaging viewing experience that enhances the overall enjoyment of the platform.
+Contracts deployed on Polygon PoS
 
-Overall, we are proud of the progress we made with SkitStars within the hackathon timeframe. We successfully developed the core functionality, integrated NFTs, and created a user-friendly interface. These accomplishments serve as a strong foundation for the future development and iteration of SkitStars beyond the hackathon.
+## GTM Strategy
 
-## What we learned
+- Improving publicity by bringing on new members to the team that will primarily work on marketing.
+- Collaborating with Big Skit makers, and growing through word of mouth, this we would make possible by ensuring we meet the expectations of the skitmakers and end users, with a user-focused approach to building, leadership and management.
+- Discovering new talents and supporting their growth through training them on content creation, trend discovery etc.
 
-During the SkitStars MVP development in the hackathon, our team learned valuable lessons, including effective time management, agile development, challenges of NFT integration, user-centric design, collaboration and communication, rapid prototyping, and presentation and pitching skills. These learnings will guide us in further developing SkitStars, incorporating user feedback, refining the product, and building a robust and user-friendly comedy streaming platform.
-
-## What's next for SkitStars
+## Beyond the Hackathon
 
 Moving forward, SkitStars aims to build upon its MVP by focusing on user feedback, expanding features, acquiring more content and creators, refining monetization strategies, fostering a strong community, developing a mobile app, pursuing partnerships and collaborations, exploring international expansion, embracing innovation, and implementing effective marketing and promotion strategies. These steps will contribute to the growth and evolution of SkitStars as a leading comedy streaming platform.
+
+The next 3 months we will focus on:
+
+- Launching our incentivised testing for both skit creators and their fans
+- Adding more features based on the feedback from users
+- Creating an Ads Marketplace
+- Growing our team to include business development and marketing talents
+- Adding cross chain functionalities.

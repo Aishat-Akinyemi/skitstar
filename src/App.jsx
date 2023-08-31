@@ -41,13 +41,21 @@ export default function App() {
   
 
   function toaster(message, status) {
-    toast({
+   if(status==="success") {
+     return  toast({
       description: message,
       status: status,
       duration: 9000,
       isClosable: true,
       colorScheme: "purple"
     })
+   } 
+   return  toast({
+    description: message,
+    status: status,
+    duration: 9000,
+    isClosable: true
+  })
   }
   
   return (
@@ -60,7 +68,7 @@ export default function App() {
                   <Box mt="40px" mb="212px">
                     <Routes>
                       <Route path="/home" element={<LandingPage toaster={toaster}/>} />
-                      <Route path="/" element={<Home creatorList={tempCreator}/>} />
+                      <Route path="/" element={<Home creatorList={tempCreator} toaster={toaster}  marketPlaceContract={marketPlaceContract}/>} />
                       <Route path="/play/:creatorAddress/:playbackId" element={<VideoPlayer toaster={toaster} contract={skitStarContract}/>} />
                       <Route path='/creator/join' element={<CreatorRegistration contract={skitStarContract} toaster={toaster} setIsCreator={setIsCreator}/>}/>
                       <Route path='/creator/:address' element={<AboutCreator toaster={toaster}  contract={skitStarContract} marketPlaceContract={marketPlaceContract} />}/>

@@ -134,13 +134,7 @@ contract SkitStar is Ownable {
     }
 
     function getAllCreators() external view returns (address[] memory) {
-        uint256 length = allStars.length;
-        address[] memory creators;
-
-        for (uint256 i = 0; i < length; i++) {
-            creators[i] = allStars[i];
-        }
-        return creators;
+        return allStars;
     }
 
     function deleteVideo(string memory _video) external {
@@ -169,6 +163,12 @@ contract SkitStar is Ownable {
     }
 
     function setERC1155BaseCreatorContractAddress(
+        address _newOwner
+    ) external onlyOwner {
+        IERC1155BaseCreator(erc1155BaseCreatorAddress).setOwner(_newOwner);
+    }
+
+    function setERC1155BaseCreatorContractOwner(
         address _erc1155BaseCreatorAddress
     ) external onlyOwner {
         erc1155BaseCreatorAddress = _erc1155BaseCreatorAddress;

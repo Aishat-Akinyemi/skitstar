@@ -167,7 +167,7 @@ export const MintNftForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) 
                 <FormInput name="name" required/>                
                 <FormInput name="description" isTextArea rows="4"/>    
                 <FormInput name="amount" label="Number of NFTs  to Mint" type="number" required />   
-                <FormInput name="price" label="Price in FTM" type="number" required />   
+                <FormInput name="price" label="Price in MATIC" type="number" required />   
                 <FormCheckBox name="saleStatus" label="Sale Status" checkBoxLabel="List NFT For Sale" defaultChecked/>
                 <Center> 
                     <ActionButton label="Create NFT Collection" type="submit" isLoading={methods.formState.isSubmitting}/>   

@@ -101,7 +101,7 @@ export const AdsVoucherForm = ({toaster, erc1155ContractAdd, marketPlaceContract
                 <FormInput name="description" isTextArea rows="4"/>  
                 
                 <FormInput name="amount" label="Amount of Ads Voucher to Create" type="number" required />
-                <FormInput name="price" label="Price in FTM" type="number" required />   
+                <FormInput name="price" label="Price in MATIC" type="number" required />   
                 <FormCheckBox name="saleStatus" label="Sale Status" checkBoxLabel="List Event For Sale" defaultChecked/>
                 <Center> 
                     <ActionButton label="Create Ads Vouchers" type="submit" isLoading={methods.formState.isSubmitting}/>   

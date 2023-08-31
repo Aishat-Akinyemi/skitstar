@@ -21,12 +21,12 @@ export const Nav = ({isCreator}) => {
             <Box>
               <Flex alignItems="flex-start" gap="40px" w="377px" h="25px"
                     fontFamily="Open Sans" fontWeight="600" color="#333333"
-              > 
-                <ChakraLink as={ReactRouterLink} to="/home#about">Our Mission</ChakraLink>
-                <Spacer/>  
-                <ChakraLink as={ReactRouterLink} to="/home#faq">FAQ</ChakraLink>
+              >               
+                {/* <Spacer/>  
+                <ChakraLink as={ReactRouterLink} to="/home#faq">FAQ</ChakraLink> */}
                 {!isCreator &&
                 <>
+                  <ChakraLink as={ReactRouterLink} to="/home#about">Our Mission</ChakraLink>
                   <Spacer/>
                  <ChakraLink as={ReactRouterLink} to="/creator/join">Become a Creator</ChakraLink>
                 </>

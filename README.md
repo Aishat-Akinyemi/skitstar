@@ -1,3 +1,9 @@
+[![Watch the Demo video](https://cdn.discordapp.com/attachments/978797941298970664/1146841403591245946/SkitStars_Cover_2.png)](https://www.youtube.com/embed/P6XDkhqt7-w?si=bAFuwoONfhxKiP9z)
+
+[Watch the Demo video](https://www.youtube.com/embed/P6XDkhqt7-w?si=bAFuwoONfhxKiP9z)
+
+# SKITSTARS
+
 We want to revolutionize the comedy industry by providing a decentralised video platform and marketplace for both comedians to connect to their fans.  
 
 Everyone loves comedy, and there is a boom in the social media comedy skit makers in Nigeria, the creators with a huge fan base generate money from sponsored posts and ads, while the upcoming creators struggle. Our team recognized the untapped potential of merging comedy, technology, and blockchain innovation. We envisioned a platform to empower comedians to reach a global audience, gain control over the monetization of their content, and establish stronger connections with their fans.

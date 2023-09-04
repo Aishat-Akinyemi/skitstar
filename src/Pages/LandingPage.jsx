@@ -8,6 +8,7 @@ import { FeatureCard } from '../components/FeatureCard';
 import {ActionButton} from '../components/ActionButton';
 import { Reviews } from '../components/Reviews';
 import { Faq } from '../components/Faq';
+import { ConnectWallet } from '@thirdweb-dev/react';
 
 
 export const LandingPage = () => {
@@ -22,7 +23,7 @@ export const LandingPage = () => {
                     <Text fontWeight="600" fontSize="20px" lineHeight="27px" fontFamily="Open Sans" maxW="564px">
                     Watch, Laugh, and Unlock the Possibility to Buy Tickets, NFTs, and Ad Vouchers, Anytime, Anywhere 
                     </Text>
-                    <Button colorScheme="purple" padding="16px 32px" borderRadius="45px" my="44px">Start Watching</Button>
+                    <ConnectWallet theme="light" style={{backgroundColor:"#8247E5", borderRadius: "45px", padding: '16px 32px', color:'white', marginTop: "44px", marginBottom: "44px"}}  btnTitle="Start Watching"/>
                     <HStack>
                         <VStack  fontFamily="Open Sans" w="100px" h="76px">
                             <Text fontWeight="400"  fontSize="32px" lineHeight="44px" mb="10px"> 
@@ -90,7 +91,7 @@ export const LandingPage = () => {
                             >
                                 Upload your content on the skitstars platform reach a wider audience of comedy fans and make money will at it
                             </Text>
-                            <ActionButton label="Become a Creator"/>
+                            <ConnectWallet theme="light" style={{backgroundColor:"#8247E5", borderRadius: "45px", padding: '16px 32px', color:'white', marginTop: "44px", marginBottom: "44px"}}  btnTitle="Get Started"/>
                         </VStack>
                         <Image  src={BitcoinTrans}  />
                     
@@ -122,7 +123,6 @@ export const LandingPage = () => {
                                 <br/> <br/>
                                 Together, let's redefine the comedy industry, elevate the voices of talented creators, and create a world where laughter and prosperity go hand in hand.
                             </Text>
-                            <ActionButton label="Learn More"/>
                         </VStack>
                         <HStack gap="20px">
                             <Image src={Steps}/>

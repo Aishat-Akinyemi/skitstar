@@ -1,8 +1,8 @@
-import { SimpleGrid, Text } from '@chakra-ui/react'
+import { SimpleGrid, Text,  Spinner, Center  } from '@chakra-ui/react'
 import React, {useEffect, useState} from 'react'
 import { VideoDisplayCard } from './VideoDisplayCard'
 
-export const VideoListGrid = ({videoLists, buy}) => {  
+export const VideoListGrid = ({videoLists, isLoading, buy}) => {  
 
  return (
     <>
@@ -21,7 +21,7 @@ export const VideoListGrid = ({videoLists, buy}) => {
             }
         </SimpleGrid>
         :
-        <Text>NO VIDEOS TO DISPLAY</Text>
+        <Center><Spinner size='xl' colorScheme='purple' speed='0.60s' thickness='5px'/></Center> 
       }
     </>
   )

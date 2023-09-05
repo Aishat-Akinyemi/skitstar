@@ -170,7 +170,7 @@ export const EventForm = ({toaster, erc1155ContractAdd, marketPlaceContract}) =>
                 <Heading mt="40px">Ticket Details </Heading>
                 <FormInput name="description" isTextArea rows="4"/> 
                 <FormInput name="amount" label="Number of Event Tickets" type="number" required />   
-                <FormInput name="price" label="Price in MATIC" type="number" required />   
+                <FormInput name="price" label="Price in opBNB" type="number" required />   
                 <FormCheckBox name="saleStatus" label="Sale Status" checkBoxLabel="List Event For Sale" defaultChecked/>
                 <Center> 
                     <ActionButton label="Create Event Ticket" type="submit" isLoading={methods.formState.isSubmitting}/>   

@@ -10,8 +10,8 @@ import { DocumentUpload } from 'iconsax-react';
 import { ActionButton } from '../components/ActionButton';
 import { useCreateAsset } from '@livepeer/react';
 import { useStorage, useContractWrite, useAddress } from '@thirdweb-dev/react';
-import { saveVideoAsset } from '../utils/SkitStarContract';
 import { useNavigate } from 'react-router-dom';
+import { subtitle } from '../utils/assemblyai';
 
 export const VideoUploadForm = ({contract, toaster}) => {
     const Categories = ["Drama", "Satire", "Musical", "Parody", "Sketch"];
@@ -123,14 +123,17 @@ export const VideoUploadForm = ({contract, toaster}) => {
 	
     const onSubmit = async (values) => {
        try {
-        const videoAssetId = (await createAsset?.())[0].id
-        console.log(videoAssetId);       
+        const [videoAsset, subtitleText] = await Promise.all([ 
+                                                      (createAsset?.()), 
+                                                       subtitle(methods.getValues("videoFile")?.[0]) 
+                                                    ]);
           const thumbnailFi = methods.getValues("thumbnail")?.[0];
           const videoAssetUrl = await storage.upload({
               "thumbnailUrl": await storage.upload(thumbnailFi, {uploadWithoutDirectory: true}),
+              "subtitle": await storage.upload(subtitleText, {uploadWithoutDirectory: true}),
               "title": values.title,
               "description": values.description,
-              "assetId": videoAssetId,
+              "assetId": videoAsset[0].id,
               "category": values.category,
               "visibility": values.visibility,
               "promotion": values.promotion

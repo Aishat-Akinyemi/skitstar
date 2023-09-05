@@ -8,7 +8,6 @@ import { useAddress, useContract, useNFTBalance, useSDK, useContractRead, useSto
 import { erc1155_abi } from '../utils/abi';
 import { BigNumber } from 'ethers';
 import ReactPlayer from 'react-player'
-import Eentt from '../utils/Een.vtt?url'
 import { ActionButton } from './ActionButton';
 
 
@@ -110,23 +109,7 @@ export const VideoPlayer = ({contract, toaster}) => {
                 :
                 <Box>
                     <Box>
-                        {/* <Player
-                                title={videoDetails.title}
-                                playbackId={videoDetails.playbackId}
-                                showTitle={true}
-                                showPipButton
-                                poster={<Image src={videoDetails.thumbnail}/>}             
-                                controls={{
-                                    autohide: 3000,
-                                }}
-                                autoPlay
-                                muted
-                                theme={{
-                                    borderStyles: { containerBorderStyle: 'hidden' },
-                                    radii: { containerBorderRadius: '10px' },
-                                }}
-                            /> */}
-                        
+                                             
                         <RPlayer url={`https://lp-playback.com/hls/${videoDetails.playbackId}/index.m3u8`} subtitleTrack={videoDetails.subtitle} />
                       
                         </Box> 

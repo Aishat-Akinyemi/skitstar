@@ -5,7 +5,7 @@ import App from "./App";
 import { ThirdwebProvider, metamaskWallet } from "@thirdweb-dev/react";
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import "./styles/globals.css";
-import { Mumbai   } from "@thirdweb-dev/chains";
+import { bin   } from "@thirdweb-dev/chains";
 import { LivepeerConfig } from '@livepeer/react';
 import LivepeerClient from '../client';
 
@@ -20,7 +20,19 @@ const colors = {
 }
 
 const chkraTheme = extendTheme({ colors });
-
+const activeChain = {
+  chain: "opBNB",
+  name:" opBNB Testnet",
+  rpc: ["https://opbnb-testnet-rpc.bnbchain.org/"],
+  chainId: 5611,
+  nativeCurrency  : {
+    decimals: 18,
+    name: "tBNB",
+    symbol: "tBNB"
+  },
+  slug: "opBNB",
+  testnet: true
+}
 const livepeerTheme = {
   colors: {
     accent: 'rgb(0, 145, 255)',
@@ -34,7 +46,7 @@ root.render(
   <Router>
       <React.StrictMode>
       <LivepeerConfig client={LivepeerClient} theme={livepeerTheme} >
-          <ThirdwebProvider activeChain={Mumbai} 
+          <ThirdwebProvider activeChain={activeChain} 
             clientId={import.meta.env.VITE_THIRDWEB_CLIENT_ID}
             supportedWallets={[ metamaskWallet() ]}>        
             <ChakraProvider theme={chkraTheme}>

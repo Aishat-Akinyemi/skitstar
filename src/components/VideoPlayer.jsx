@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useRef} from 'react'
 import { Player } from '@livepeer/react';
 import { Image, Box, Flex, Text, Spacer } from '@chakra-ui/react';
 import CreatorInfo from './CreatorInfo';
@@ -7,6 +7,9 @@ import { useLocation, useParams } from "react-router-dom";
 import { useAddress, useContract, useNFTBalance, useSDK, useContractRead, useStorage, useContractWrite } from "@thirdweb-dev/react";
 import { erc1155_abi } from '../utils/abi';
 import { BigNumber } from 'ethers';
+import ReactPlayer from 'react-player'
+import Eentt from '../utils/Een.vtt?url'
+import { ActionButton } from './ActionButton';
 
 
 
@@ -18,11 +21,10 @@ export const VideoPlayer = ({contract, toaster}) => {
     const sdk = useSDK(); 
     const storage = useStorage();
     const { creatorAddress} = useParams();  
-
     const [isInaccessible, setIsInaccessible] = useState(true);
     const [isLoading, setisLoading] = useState(false); 
     const  [creatorInfo,  setCreatorInfo]  = useState();
-    
+     
     const { data: creatordata, isLoading: isLoadingCreatordata, error: creatordataError } = useContractRead(contract, "getStar", [creatorAddress]); 
     const { data: videoAssets, isLoading: isLoadingVideoAssets, error: videoAssetsError} = useContractRead(contract, "getVideoAssets", [creatorAddress]);  
     const { mutateAsync: subscribe } = useContractWrite(contract, "subscribe");
@@ -75,7 +77,7 @@ export const VideoPlayer = ({contract, toaster}) => {
       return () => {
         setIsInaccessible(true)
       }
-    }, [])
+    }, [videoDetails])
 
     useEffect(() => {
         let info  = {};  
@@ -95,7 +97,9 @@ export const VideoPlayer = ({contract, toaster}) => {
             setCreatorInfo(info);                    
         });  
       }
-    }, [creatordata])        
+    }, [creatordata])     
+    
+    
   
   return (           
         <Box w="65vw">
@@ -106,12 +110,12 @@ export const VideoPlayer = ({contract, toaster}) => {
                 :
                 <Box>
                     <Box>
-                        <Player
+                        {/* <Player
                                 title={videoDetails.title}
                                 playbackId={videoDetails.playbackId}
                                 showTitle={true}
                                 showPipButton
-                                poster={<Image src={videoDetails.thumbnail}/>}               
+                                poster={<Image src={videoDetails.thumbnail}/>}             
                                 controls={{
                                     autohide: 3000,
                                 }}
@@ -121,7 +125,10 @@ export const VideoPlayer = ({contract, toaster}) => {
                                     borderStyles: { containerBorderStyle: 'hidden' },
                                     radii: { containerBorderRadius: '10px' },
                                 }}
-                            />
+                            /> */}
+                        
+                        <RPlayer url={`https://lp-playback.com/hls/${videoDetails.playbackId}/index.m3u8`} subtitleTrack={videoDetails.subtitle} />
+                      
                         </Box> 
                         <Box my="24px" display="flex" flexDirection="column" gap="24px">
                             {   videoDetails &&
@@ -150,5 +157,72 @@ export const VideoPlayer = ({contract, toaster}) => {
            
         </Box>
 
+  )
+}
+
+const RPlayer = ({url, subtitleTrack}) => {
+    const playerRef = useRef(null); 
+    {
+        // if (playerRef.current === null) {
+        //     playerRef.current = new VideoPlayer();
+        //   }
+    } 
+    // const [playing, setPlaying]=useState(false)
+    // if (playerRef.current === null) {
+    //     playerRef.current = new ReactPlayer();
+    // }
+    
+    const [subtitle, setSubtitle] = useState(false)
+
+    useEffect(() => {
+        if(subtitleTrack){ 
+            const tracks = playerRef?.current?.getInternalPlayer()?.textTracks;
+            console.log(tracks)
+            if(!subtitle){  
+                if(tracks){ 
+                tracks[0].mode ="disabled"}
+            } else if(subtitle){
+              if(tracks){
+                tracks[0].mode='showing'
+              }
+            }
+    }
+
+    // return () => {
+    //     playerRef.current = null;
+    //     url = null;
+    //     subtitleTrack = null;
+    // }
+    }, [subtitleTrack, subtitle])
+
+    const toggleSubtitle = () => {
+        setSubtitle(!subtitle); 
+    }
+  return (
+        <Box>
+            <ReactPlayer  
+                ref={playerRef}
+                playing
+                controls
+                pip
+                width="100%"
+                height="60vh"
+                url={url}
+                config={{
+                    file : {
+                        attributes:{
+                            crossOrigin:'anonymous'
+                        },
+                        forceHLS: true,
+                        tracks : [
+                            { kind: 'subtitles', src: subtitleTrack, srcLang: "en", default: true }
+                        ]
+                    }
+                }}    
+            />
+              <ActionButton label={subtitle ? "Hide Subtitle": "Subtitle"} onClick={toggleSubtitle} my="24px" />
+        </Box>
+     
+ 
   )
 }

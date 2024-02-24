@@ -4,7 +4,7 @@
 
 # SKITSTARS
 
-We want to revolutionize the comedy industry by providing a decentralised video platform and marketplace for both comedians to connect to their fans.  
+We want to revolutionize the comedy industry by providing a decentralised video platform and marketplace for comedians to connect to their fans.  
 
 Everyone loves comedy, and there is a boom in the social media comedy skit makers in Nigeria, the creators with a huge fan base generate money from sponsored posts and ads, while the upcoming creators struggle. Our team recognized the untapped potential of merging comedy, technology, and blockchain innovation. We envisioned a platform to empower comedians to reach a global audience, gain control over the monetization of their content, and establish stronger connections with their fans.
 
